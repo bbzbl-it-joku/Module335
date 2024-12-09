@@ -3,6 +3,7 @@ import { Session, User as SupabaseAuthUser, SupabaseClient } from '@supabase/sup
 import { BehaviorSubject, Observable } from 'rxjs';
 import { ISupabaseUser, IUserProfile, User, UserRole } from '../data/user';
 import { supabase } from '../supabase/supabase.config';
+import { ToastService } from './toast.service';
 
 @Injectable({
   providedIn: 'root'
@@ -11,7 +12,7 @@ export class AuthService {
   private supabase: SupabaseClient;
   private currentUser = new BehaviorSubject<User | null>(null);
 
-  constructor() {
+  constructor(private toastService: ToastService) {
     this.supabase = supabase;
     this.loadUser();
     this.setupAuthListener();
@@ -34,13 +35,16 @@ export class AuthService {
   private async loadUserProfile(userId: string): Promise<void> {
     try {
       // Fetch base user data
-      const { data: supabaseUser, error: userError } = await this.supabase
-        .from('users')
-        .select('id, email, username, created_at, updated_at')
-        .eq('id', userId)
-        .single();
-
-      if (userError) throw userError;
+      let supabaseUser: ISupabaseUser;
+      this.supabase.auth.getUser().then(user => {
+        supabaseUser = {
+          id: user?.data.user?.user_metadata?.['id'],
+          email: user?.data.user?.email!,
+          username: user?.data.user?.user_metadata?.['username'],
+          created_at: user?.data.user?.created_at!,
+          updated_at: user?.data.user?.updated_at || user?.data.user?.created_at!,
+        }
+      });
 
       // Fetch profile data
       const { data: profile, error: profileError } = await this.supabase
@@ -53,13 +57,13 @@ export class AuthService {
 
       // Combine the data into our User class
       const user = new User(
-        supabaseUser as ISupabaseUser,
+        supabaseUser! as ISupabaseUser,
         profile as IUserProfile
       );
 
       this.currentUser.next(user);
     } catch (error) {
-      console.error('Error loading user profile:', error);
+      this.toastService.presentToast('Failed to load user profile', 'danger');
       this.currentUser.next(null);
     }
   }
@@ -91,7 +95,7 @@ export class AuthService {
 
       // Update username in users table
       const { error: userError } = await this.supabase
-        .from('users')
+        .from('auth.users')
         .update({ username })
         .eq('id', authData.user.id);
 
@@ -144,7 +148,7 @@ export class AuthService {
     if (!currentUser) throw new Error('No user logged in');
 
     const { error } = await this.supabase
-      .from('users')
+      .from('auth.users')
       .update({ username })
       .eq('id', currentUser.id);
 
