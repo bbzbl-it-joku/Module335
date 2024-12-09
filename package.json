@@ -30,6 +30,7 @@
     "@capacitor/keyboard": "6.0.3",
     "@capacitor/status-bar": "6.0.2",
     "@ionic/angular": "^8.0.0",
+    "@supabase/supabase-js": "^2.47.2",
     "ionicons": "^7.2.1",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0",
@@ -62,5 +63,10 @@
     "karma-jasmine": "~5.1.0",
     "karma-jasmine-html-reporter": "~2.1.0",
     "typescript": "~5.4.0"
+  },
+  "overrides": {
+    "@supabase/supabase-js": {
+        "@supabase/auth-js": "2.61.0"
+    }
   }
 }
