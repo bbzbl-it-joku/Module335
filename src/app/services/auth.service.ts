@@ -20,9 +20,40 @@ export class AuthService {
 
   private setupAuthListener(): void {
     this.supabase.auth.onAuthStateChange(async (event, session) => {
-      if (session?.user) {
-        await this.loadUserProfile(session.user.id);
-      } else {
+      if (event === 'SIGNED_IN' && session?.user) {
+        try {
+          // Check if profile exists
+          const { data: existingProfile } = await this.supabase
+            .from('user_profiles')
+            .select('*')
+            .eq('user_id', session.user.id)
+            .single();
+
+          // If no profile exists, create one
+          if (!existingProfile) {
+            const { error: profileError } = await this.supabase
+              .from('user_profiles')
+              .insert({
+                user_id: session.user.id,
+                karen_level: 1,
+                total_points: 0,
+                role: UserRole.USER,
+                push_notifications: false
+              });
+
+            if (profileError) {
+              this.toastService.presentToast('Failed to create user profile', 'danger');
+              throw profileError;
+            }
+          }
+
+          // Load the user profile (either existing or newly created)
+          await this.loadUserProfile(session.user.id);
+        } catch (error) {
+          console.error('Error in auth state change:', error);
+          this.currentUser.next(null);
+        }
+      } else if (!session?.user) {
         this.currentUser.next(null);
       }
     });
@@ -72,37 +103,22 @@ export class AuthService {
     data: { user: SupabaseAuthUser | null; session: Session | null } | null;
     error: Error | null;
   }> {
-    const { data: authData, error: authError } = await this.supabase.auth.signUp({
-      email,
-      password
-    });
+    try {
+      const { data: authData, error: authError } = await this.supabase.auth.signUp({
+        email,
+        password,
+        options: {
+          data: { username } // Store username in user metadata
+        }
+      });
 
-    if (authError) throw authError;
+      if (authError) throw authError;
 
-    if (authData?.user) {
-      // Create initial user profile
-      const { error: profileError } = await this.supabase
-        .from('user_profiles')
-        .insert({
-          user_id: authData.user.id,
-          karen_level: 1,
-          total_points: 0,
-          role: UserRole.USER,
-          push_notifications: false
-        });
-
-      if (profileError) throw profileError;
-
-      // Update username in users table
-      const { error: userError } = await this.supabase
-        .from('auth.users')
-        .update({ username })
-        .eq('id', authData.user.id);
-
-      if (userError) throw userError;
+      // Return success - profile will be created on first sign in
+      return { data: authData, error: null };
+    } catch (error) {
+      return { data: null, error: error as Error };
     }
-
-    return { data: authData, error: null };
   }
 
   async signIn(email: string, password: string): Promise<{
