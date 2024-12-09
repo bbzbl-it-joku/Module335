@@ -7,7 +7,7 @@ import { addIcons } from 'ionicons';
 import { personAdd, logIn } from 'ionicons/icons';
 import { Subscription } from 'rxjs';
 import { AuthService } from 'src/app/services/auth.service';
-import { ToastService } from 'src/app/services/toast.service';
+import { ToastService } from 'src/app/services/util/toast.service';
 
 @Component({
   selector: 'app-signup',

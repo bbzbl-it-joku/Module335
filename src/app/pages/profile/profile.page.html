@@ -1,0 +1,53 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title size="large">Profile</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="logout()" color="primary">
+        <ion-label>Logout</ion-label>
+        <ion-icon slot="end" name="log-out-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true" class="ion-padding">
+  <div class="ion-text-center">
+    <!-- Avatar -->
+    <ion-avatar class="avatar-large ion-margin-auto">
+      <div id="svgDiv" [innerHTML]="avatarSvg"></div>
+    </ion-avatar>
+
+    <!-- User Info -->
+    <h2 class="ion-margin-top">{{ user?.username || 'Username' }}</h2>
+    <p class="ion-margin-bottom text-muted">{{ user?.email || 'email@example.com' }}</p>
+
+    <!-- Level Progress -->
+    <ion-card class="level-card">
+      <ion-card-content>
+        <div class="level-container">
+          <span>Level {{ user?.karenLevel || 3 }}</span>
+          <span>Next Level</span>
+        </div>
+        <ion-progress-bar value="0.6"></ion-progress-bar>
+      </ion-card-content>
+    </ion-card>
+
+    <!-- Action Buttons -->
+    <ion-button expand="block" fill="outline" class="ion-margin-bottom" (click)="editProfile()">
+      Edit Profile
+    </ion-button>
+
+    <ion-button expand="block" fill="outline" class="ion-margin-bottom" (click)="changePassword()">
+      Change Password
+    </ion-button>
+
+    <!-- Push Notifications Toggle -->
+    <ion-item lines="none" class="notification-toggle">
+      <ion-label>Push Notifications</ion-label>
+      <ion-toggle
+        [checked]="user?.pushNotifications"
+        (ionChange)="togglePushNotifications()"
+      ></ion-toggle>
+    </ion-item>
+  </div>
+</ion-content>

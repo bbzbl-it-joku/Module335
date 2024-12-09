@@ -3,7 +3,7 @@ import { Session, User as SupabaseAuthUser, SupabaseClient } from '@supabase/sup
 import { BehaviorSubject, Observable } from 'rxjs';
 import { ISupabaseUser, IUserProfile, User, UserRole } from '../data/user';
 import { supabase } from '../supabase/supabase.config';
-import { ToastService } from './toast.service';
+import { ToastService } from './util/toast.service';
 
 @Injectable({
   providedIn: 'root'
@@ -55,6 +55,8 @@ export class AuthService {
         }
       } else if (!session?.user) {
         this.currentUser.next(null);
+      } else if (event === 'SIGNED_OUT') {
+        this.currentUser.next(null);
       }
     });
   }
@@ -66,16 +68,16 @@ export class AuthService {
   private async loadUserProfile(userId: string): Promise<void> {
     try {
       // Fetch base user data
-      let supabaseUser: ISupabaseUser;
-      this.supabase.auth.getUser().then(user => {
-        supabaseUser = {
-          id: user?.data.user?.user_metadata?.['id'],
-          email: user?.data.user?.email!,
-          username: user?.data.user?.user_metadata?.['username'],
-          created_at: user?.data.user?.created_at!,
-          updated_at: user?.data.user?.updated_at || user?.data.user?.created_at!,
-        }
-      });
+      const { data: { user } } = await this.supabase.auth.getUser();
+      if (!user) throw new Error('No user found');
+
+      const supabaseUser: ISupabaseUser = {
+        id: user.id,
+        email: user.email!,
+        username: user.user_metadata?.['username'],
+        created_at: user.created_at!,
+        updated_at: user.updated_at || user.created_at!,
+      };
 
       // Fetch profile data
       const { data: profile, error: profileError } = await this.supabase
@@ -86,18 +88,16 @@ export class AuthService {
 
       if (profileError) throw profileError;
 
-      // Combine the data into our User class
-      const user = new User(
-        supabaseUser! as ISupabaseUser,
-        profile as IUserProfile
-      );
-
-      this.currentUser.next(user);
+      // Combine the data into our User class (renamed from 'user' to 'userInstance')
+      const userInstance = new User(supabaseUser, profile as IUserProfile);
+      this.currentUser.next(userInstance);
     } catch (error) {
+      console.error('Error loading user profile:', error);
       this.toastService.presentToast('Failed to load user profile', 'danger');
       this.currentUser.next(null);
     }
   }
+
 
   async signUp(email: string, password: string, username: string): Promise<{
     data: { user: SupabaseAuthUser | null; session: Session | null } | null;
@@ -176,14 +176,22 @@ export class AuthService {
     const currentUser = this.currentUser.value;
     if (!currentUser) throw new Error('No user logged in');
 
-    await this.updateProfile({
-      push_notifications: !currentUser.pushNotifications
-    });
+    if (!currentUser.id) {
+      throw new Error('Invalid user ID');
+    }
+
+    try {
+      await this.updateProfile({
+        push_notifications: !currentUser.pushNotifications
+      });
+    } catch (error) {
+      console.error('Toggle notifications error:', error);
+      throw error;
+    }
   }
 
   async signOut(): Promise<void> {
     await this.supabase.auth.signOut();
-    this.currentUser.next(null);
   }
 
   async getSession() {

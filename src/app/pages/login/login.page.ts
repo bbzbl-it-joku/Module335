@@ -23,7 +23,7 @@ import {
 import { addIcons } from 'ionicons';
 import { logIn, personAdd } from 'ionicons/icons';
 import { AuthService } from '../../services/auth.service';
-import { ToastService } from '../../services/toast.service';
+import { ToastService } from '../../services/util/toast.service';
 
 @Component({
   selector: 'app-login',
