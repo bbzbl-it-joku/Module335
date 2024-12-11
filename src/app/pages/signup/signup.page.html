@@ -1,6 +1,11 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
-    <ion-title class="ion-text-center">Welcome to TUKA</ion-title>
+    <ion-buttons slot="start">
+      <ion-button (click)="back()" color="primary">
+        <ion-label>Back</ion-label>
+        <ion-icon slot="start" name="arrow-back-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 

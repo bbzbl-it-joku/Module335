@@ -2,9 +2,9 @@ import { CommonModule } from '@angular/common';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { IonButton, IonCard, IonCardContent, IonCardHeader, IonCardSubtitle, IonCardTitle, IonContent, IonHeader, IonIcon, IonInput, IonItem, IonLabel, IonText, IonTitle, IonToolbar } from "@ionic/angular/standalone";
+import { IonButton, IonButtons, IonCard, IonCardContent, IonCardHeader, IonCardSubtitle, IonCardTitle, IonContent, IonHeader, IonIcon, IonInput, IonItem, IonLabel, IonText, IonTitle, IonToolbar } from "@ionic/angular/standalone";
 import { addIcons } from 'ionicons';
-import { logIn, personAdd } from 'ionicons/icons';
+import { arrowBackOutline, logIn, personAdd } from 'ionicons/icons';
 import { Subscription } from 'rxjs';
 import { AuthService, AuthStateService, ToastService } from 'src/app/services';
 
@@ -13,7 +13,7 @@ import { AuthService, AuthStateService, ToastService } from 'src/app/services';
   templateUrl: './signup.page.html',
   styleUrls: ['./signup.page.scss'],
   standalone: true,
-  imports: [IonIcon, IonInput, IonButton, IonText, IonLabel, IonItem, IonCardContent, IonCardSubtitle, IonCardTitle, IonCard, IonCardHeader, IonContent, IonTitle, IonToolbar, IonHeader, CommonModule, ReactiveFormsModule,]
+  imports: [IonButtons, IonIcon, IonInput, IonButton, IonText, IonLabel, IonItem, IonCardContent, IonCardSubtitle, IonCardTitle, IonCard, IonCardHeader, IonContent, IonTitle, IonToolbar, IonHeader, CommonModule, ReactiveFormsModule,]
 })
 export class SignupPage implements OnInit, OnDestroy {
   signupForm: FormGroup;
@@ -26,7 +26,7 @@ export class SignupPage implements OnInit, OnDestroy {
     private toastService: ToastService,
     private router: Router
   ) {
-    addIcons({ personAdd, logIn });
+    addIcons({ arrowBackOutline, personAdd, logIn });
 
     this.signupForm = this.formBuilder.group({
       username: ['', [Validators.required, Validators.minLength(3)]],
@@ -65,5 +65,9 @@ export class SignupPage implements OnInit, OnDestroy {
     } else {
       await this.toastService.presentToast('Please fill in all required fields correctly.', 'warning');
     }
+  }
+
+  async back() {
+    await this.router.navigate(['/']);
   }
 }

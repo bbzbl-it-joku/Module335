@@ -2,9 +2,9 @@ import { CommonModule } from '@angular/common';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { IonButton, IonCard, IonCardContent, IonCardHeader, IonCardSubtitle, IonCardTitle, IonContent, IonHeader, IonIcon, IonInput, IonItem, IonLabel, IonText, IonTitle, IonToolbar } from '@ionic/angular/standalone';
+import { IonButton, IonButtons, IonCard, IonCardContent, IonCardHeader, IonCardSubtitle, IonCardTitle, IonContent, IonHeader, IonIcon, IonInput, IonItem, IonLabel, IonText, IonTitle, IonToolbar } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
-import { logIn, personAdd } from 'ionicons/icons';
+import { arrowBackOutline, logIn, logOutOutline, personAdd } from 'ionicons/icons';
 import { Subscription } from 'rxjs';
 import { AuthService, AuthStateService, ToastService } from 'src/app/services';
 
@@ -13,7 +13,7 @@ import { AuthService, AuthStateService, ToastService } from 'src/app/services';
   templateUrl: './login.page.html',
   styleUrls: ['./login.page.scss'],
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, IonHeader, IonToolbar, IonTitle, IonContent, IonCard, IonCardHeader, IonCardTitle, IonCardSubtitle, IonCardContent, IonItem, IonLabel, IonInput, IonButton, IonIcon, IonText]
+  imports: [IonButtons, CommonModule, ReactiveFormsModule, IonHeader, IonToolbar, IonTitle, IonContent, IonCard, IonCardHeader, IonCardTitle, IonCardSubtitle, IonCardContent, IonItem, IonLabel, IonInput, IonButton, IonIcon, IonText]
 })
 export class LoginPage implements OnInit, OnDestroy {
   loginForm: FormGroup;
@@ -26,7 +26,7 @@ export class LoginPage implements OnInit, OnDestroy {
     private toastService: ToastService,
     private router: Router
   ) {
-    addIcons({ logIn, personAdd });
+    addIcons({ logOutOutline, logIn, personAdd, arrowBackOutline });
 
     this.loginForm = this.formBuilder.group({
       email: ['', [Validators.required, Validators.email]],
@@ -64,5 +64,9 @@ export class LoginPage implements OnInit, OnDestroy {
     } else {
       await this.toastService.presentToast('Please fill in all required fields correctly.', 'warning');
     }
+  }
+
+  async back() {
+    await this.router.navigate(['/']);
   }
 }
