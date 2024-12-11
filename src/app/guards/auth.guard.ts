@@ -1,8 +1,10 @@
 import { Injectable } from '@angular/core';
 import { CanActivate, CanActivateChild, Router, UrlTree } from '@angular/router';
 import { Observable, from, of } from 'rxjs';
-import { map, take, switchMap } from 'rxjs/operators';
-import { AuthService } from '../services/auth.service';
+import { map, take, switchMap, catchError } from 'rxjs/operators';
+import { UserProfileService } from '../services';
+import { AuthStateService } from '../services/auth/auth-state.service';
+import { AuthService } from '../services/auth/auth.service';
 
 @Injectable({
   providedIn: 'root'
@@ -10,24 +12,29 @@ import { AuthService } from '../services/auth.service';
 export class AuthGuard implements CanActivate, CanActivateChild {
   constructor(
     private authService: AuthService,
+    private authStateService: AuthStateService,
+    private userProfileService: UserProfileService,
     private router: Router
   ) {}
 
   private handleAuth(): Observable<boolean | UrlTree> {
-    // Convert the Promise to an Observable using 'from'
     return from(this.authService.getSession()).pipe(
-      switchMap(({ data: { session } }) => {
-        if (session?.user) {
-          return of(true);
+      switchMap(({ data: { session }, error }) => {
+        if (error) {
+          console.error('Session check error:', error);
+          return of(this.router.createUrlTree(['/login']));
         }
-        return this.authService.getCurrentUser().pipe(
+
+        if (session?.user) {
+          return from(this.userProfileService.loadProfile(session.user.id)).pipe(
+            map(() => true),
+            catchError(() => of(this.router.createUrlTree(['/login'])))
+          );
+        }
+
+        return this.authStateService.getCurrentUser().pipe(
           take(1),
-          map(user => {
-            if (user) {
-              return true;
-            }
-            return this.router.createUrlTree(['/login']);
-          })
+          map(user => user ? true : this.router.createUrlTree(['/login']))
         );
       })
     );

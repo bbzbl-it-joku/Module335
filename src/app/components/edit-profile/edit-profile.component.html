@@ -1,0 +1,52 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Edit Profile</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="dismissModal()">
+        <ion-icon name="close-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <form [formGroup]="profileForm" (ngSubmit)="onSubmit()">
+    <ion-list>
+      <ion-item>
+        <ion-label position="stacked">Username</ion-label>
+        <ion-input
+          formControlName="username"
+          type="text"
+          [clearInput]="true"
+          placeholder="Enter username"
+        ></ion-input>
+      </ion-item>
+      <div *ngIf="profileForm.get('username')?.touched && profileForm.get('username')?.errors?.['required']" class="error-message">
+        Username is required
+      </div>
+
+      <ion-item>
+        <ion-label position="stacked">Email</ion-label>
+        <ion-input
+          formControlName="email"
+          type="email"
+          [clearInput]="true"
+          placeholder="Enter email"
+        ></ion-input>
+      </ion-item>
+      <div *ngIf="profileForm.get('email')?.touched && profileForm.get('email')?.errors?.['email']" class="error-message">
+        Please enter a valid email
+      </div>
+
+      <div class="ion-padding-top">
+        <ion-button
+          expand="block"
+          type="submit"
+          [disabled]="!profileForm.valid || profileForm.pristine"
+        >
+          Save Changes
+        </ion-button>
+      </div>
+    </ion-list>
+  </form>
+</ion-content>

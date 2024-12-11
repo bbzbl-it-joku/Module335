@@ -1,44 +1,82 @@
-/* profile.page.scss */
-:host {
-  .avatar-large {
-    width: 100px;
-    height: 100px;
-    margin: 20px auto;
-    background: #f5f5f5;
+.avatar-large {
+  width: 100px;
+  height: 100px;
+  margin: 20px auto;
+  border: 3px solid var(--ion-color-primary);
+}
 
-    #svgDiv {
-      width: 95px;
-      height: 95px;
+.level-card {
+  margin: 20px 0;
+
+  .level-container {
+    margin-bottom: 12px;
+  }
+
+  .level-info {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 8px;
+
+    .current-points {
+      color: var(--ion-color-primary);
+      font-weight: bold;
+    }
+
+    .next-level {
+      color: var(--ion-color-medium);
     }
   }
 
-  .level-card {
-    margin: 20px 0;
-    box-shadow: none;
-    border: 1px solid var(--ion-color-light);
-
-    .level-container {
-      display: flex;
-      justify-content: space-between;
-      margin-bottom: 8px;
-      font-size: 14px;
-    }
-  }
-
-  .notification-toggle {
-    --padding-start: 0;
-    --inner-padding-end: 0;
-    margin-top: 16px;
-    
-  }
-
-  .text-muted {
+  .points-needed {
+    margin-top: 8px;
+    font-size: 0.9em;
     color: var(--ion-color-medium);
+    text-align: center;
   }
 
-  ion-button {
-    --border-radius: 8px;
-    margin-left: 16px;
-    margin-right: 16px;
+  ion-progress-bar {
+    height: 8px;
+    border-radius: 4px;
+    --progress-background: var(--ion-color-primary);
+    --buffer-background: var(--ion-color-light);
+  }
+}
+
+.stats-card {
+  margin: 20px 0;
+  ion-item {
+    --padding-start: 0;
+
+    ion-note {
+      font-size: 1em;
+    }
+  }
+}
+.action-list {
+  margin-top: 20px;
+  padding: 0;
+}
+
+.text-muted {
+  color: var(--ion-color-medium);
+}
+
+ion-item-divider {
+  --background: var(--ion-color-light);
+  --padding-start: 16px;
+  min-height: 40px;
+
+  ion-label {
+    margin-top: 8px;
+    margin-bottom: 8px;
+    font-weight: 500;
+  }
+}
+
+ion-item {
+  --padding-start: 16px;
+
+  ion-icon {
+    color: var(--ion-color-medium);
   }
 }

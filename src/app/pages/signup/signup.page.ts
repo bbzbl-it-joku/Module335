@@ -1,20 +1,21 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
-import { IonContent, IonHeader, IonTitle, IonToolbar, IonCard, IonCardHeader, IonCardTitle, IonCardSubtitle, IonCardContent, IonItem, IonLabel, IonInput, IonButton, IonIcon, IonText } from '@ionic/angular/standalone';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import { IonButton, IonInput, IonCard, IonCardContent, IonCardHeader, IonCardSubtitle, IonCardTitle, IonContent, IonHeader, IonIcon, IonItem, IonLabel, IonText, IonTitle, IonToolbar } from "@ionic/angular/standalone";
 import { addIcons } from 'ionicons';
-import { personAdd, logIn } from 'ionicons/icons';
+import { logIn, personAdd } from 'ionicons/icons';
 import { Subscription } from 'rxjs';
-import { AuthService } from 'src/app/services/auth.service';
-import { ToastService } from 'src/app/services/util/toast.service';
+import { AuthStateService } from '../../services/auth/auth-state.service';
+import { AuthService } from '../../services/auth/auth.service';
+import { ToastService } from '../../services/util/toast.service';
 
 @Component({
   selector: 'app-signup',
   templateUrl: './signup.page.html',
   styleUrls: ['./signup.page.scss'],
   standalone: true,
-  imports: [CommonModule,ReactiveFormsModule,IonHeader,IonToolbar,IonTitle,IonContent,IonCard,IonCardHeader,IonCardTitle,IonCardSubtitle,IonCardContent,IonItem,IonLabel,IonInput,IonButton,IonIcon,IonText]
+  imports: [IonIcon, IonInput, IonButton, IonText, IonLabel, IonItem, IonCardContent, IonCardSubtitle, IonCardTitle, IonCard, IonCardHeader, IonContent, IonTitle, IonToolbar, IonHeader, CommonModule, ReactiveFormsModule,]
 })
 export class SignupPage implements OnInit, OnDestroy {
   signupForm: FormGroup;
@@ -23,10 +24,11 @@ export class SignupPage implements OnInit, OnDestroy {
   constructor(
     private formBuilder: FormBuilder,
     private authService: AuthService,
+    private authStateService: AuthStateService,
     private toastService: ToastService,
     private router: Router
   ) {
-    addIcons({personAdd,logIn});
+    addIcons({ personAdd, logIn });
 
     this.signupForm = this.formBuilder.group({
       username: ['', [Validators.required, Validators.minLength(3)]],
@@ -36,8 +38,7 @@ export class SignupPage implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    // Check if user is already logged in
-    this.authSubscription = this.authService.getCurrentUser().subscribe(user => {
+    this.authSubscription = this.authStateService.getCurrentUser().subscribe(user => {
       if (user) {
         this.router.navigate(['/tabs/tab1']);
       }
@@ -45,27 +46,22 @@ export class SignupPage implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    if (this.authSubscription) {
-      this.authSubscription.unsubscribe();
-    }
+    this.authSubscription?.unsubscribe();
   }
 
   async signup() {
     if (this.signupForm.valid) {
       try {
         const { email, password, username } = this.signupForm.value;
-        await this.authService.signUp(email, password, username);
+        const { error } = await this.authService.signUp(email, password, username);
+
+        if (error) throw error;
 
         await this.toastService.presentToast('Account created successfully!', 'success');
         await this.router.navigate(['/tabs/tab1']);
       } catch (error) {
         console.error('Signup error:', error);
-        let errorMessage = 'Failed to create account. Please try again.';
-
-        if (error instanceof Error) {
-          errorMessage = error.message;
-        }
-
+        const errorMessage = error instanceof Error ? error.message : 'Failed to create account. Please try again.';
         await this.toastService.presentToast(errorMessage, 'danger');
       }
     } else {

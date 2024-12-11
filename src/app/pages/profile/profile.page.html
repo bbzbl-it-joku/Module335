@@ -12,42 +12,104 @@
 
 <ion-content [fullscreen]="true" class="ion-padding">
   <div class="ion-text-center">
-    <!-- Avatar -->
+    <!-- Avatar Section -->
     <ion-avatar class="avatar-large ion-margin-auto">
       <div id="svgDiv" [innerHTML]="avatarSvg"></div>
     </ion-avatar>
 
-    <!-- User Info -->
+    <!-- User Info Section -->
     <h2 class="ion-margin-top">{{ user?.username || 'Username' }}</h2>
     <p class="ion-margin-bottom text-muted">{{ user?.email || 'email@example.com' }}</p>
 
-    <!-- Level Progress -->
+    <!-- Level Progress Section -->
     <ion-card class="level-card">
+      <ion-card-header>
+        <ion-card-subtitle>Current Level</ion-card-subtitle>
+        <ion-card-title class="ion-margin-bottom">
+          Level {{ levelProgress?.currentLevel || 1 }}
+        </ion-card-title>
+      </ion-card-header>
+
       <ion-card-content>
+        <!-- Level Progress -->
         <div class="level-container">
-          <span>Level {{ user?.karenLevel || 3 }}</span>
-          <span>Next Level</span>
+          <div class="level-info">
+            <span class="current-points">{{ levelProgress?.currentPoints }} XP</span>
+            <span class="next-level">{{ levelProgress?.totalPointsRequired }} XP needed</span>
+          </div>
         </div>
-        <ion-progress-bar value="0.6"></ion-progress-bar>
+
+        <!-- Progress Bar -->
+        <ion-progress-bar [value]="(levelProgress?.progressPercentage || 0)  / 100"></ion-progress-bar>
+
+        <!-- Points to Next Level -->
+        <p class="points-needed">
+          {{ levelProgress?.pointsToNextLevel }} points to Level {{ ( levelProgress?.currentLevel || 1 ) + 1 }}
+        </p>
+      </ion-card-content>
+    </ion-card>
+
+    <!-- Stats Section -->
+    <ion-card class="stats-card">
+      <ion-card-header>
+        <ion-card-subtitle>Your Stats</ion-card-subtitle>
+      </ion-card-header>
+      <ion-card-content>
+        <ion-list>
+          <ion-item>
+            <ion-label>Total Points</ion-label>
+            <ion-note slot="end" color="primary">{{ levelProgress?.currentPoints }}</ion-note>
+          </ion-item>
+          <ion-item>
+            <ion-label>Member Since</ion-label>
+            <ion-note slot="end">{{ user?.createdAt | date:'mediumDate' }}</ion-note>
+          </ion-item>
+        </ion-list>
       </ion-card-content>
     </ion-card>
 
     <!-- Action Buttons -->
-    <ion-button expand="block" fill="outline" class="ion-margin-bottom" (click)="editProfile()">
-      Edit Profile
-    </ion-button>
+    <ion-list class="action-list">
+      <ion-item-group>
+        <ion-item-divider>
+          <ion-label>Account Settings</ion-label>
+        </ion-item-divider>
 
-    <ion-button expand="block" fill="outline" class="ion-margin-bottom" (click)="changePassword()">
-      Change Password
-    </ion-button>
+        <ion-item button detail (click)="editProfile()">
+          <ion-icon name="person-outline" slot="start"></ion-icon>
+          <ion-label>Edit Profile</ion-label>
+        </ion-item>
 
-    <!-- Push Notifications Toggle -->
-    <ion-item lines="none" class="notification-toggle">
-      <ion-label>Push Notifications</ion-label>
-      <ion-toggle
-        [checked]="user?.pushNotifications"
-        (ionChange)="togglePushNotifications()"
-      ></ion-toggle>
-    </ion-item>
+        <ion-item button detail (click)="changePassword()">
+          <ion-icon name="key-outline" slot="start"></ion-icon>
+          <ion-label>Change Password</ion-label>
+        </ion-item>
+
+        <ion-item>
+          <ion-icon name="notifications-outline" slot="start"></ion-icon>
+          <ion-label>Push Notifications</ion-label>
+          <ion-toggle
+            slot="end"
+            [checked]="user?.pushNotifications"
+            (ionChange)="togglePushNotifications()"
+          ></ion-toggle>
+        </ion-item>
+      </ion-item-group>
+    </ion-list>
+
+    <ng-container *ngIf="user?.isAdmin()">
+      <ion-list class="action-list">
+        <ion-item-group>
+          <ion-item-divider>
+            <ion-label>Admin Settings</ion-label>
+          </ion-item-divider>
+
+          <ion-item button detail (click)="gainXP()">
+            <ion-icon name="add-circle-outline" slot="start"></ion-icon>
+            <ion-label>Gain XP</ion-label>
+          </ion-item>
+        </ion-item-group>
+      </ion-list>
+    </ng-container>
   </div>
 </ion-content>

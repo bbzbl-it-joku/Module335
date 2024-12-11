@@ -2,28 +2,26 @@ import { Injectable } from '@angular/core';
 import { CanActivate, Router, UrlTree } from '@angular/router';
 import { Observable } from 'rxjs';
 import { map, take } from 'rxjs/operators';
-import { AuthService } from '../services/auth/auth.service';
+import { UserRole } from '../models/enums/user-role.enum';
+import { AuthStateService } from '../services/auth';
 
 @Injectable({
   providedIn: 'root'
 })
-export class NoAuthGuard implements CanActivate {
+export class AdminGuard implements CanActivate {
   constructor(
-    private authService: AuthService,
+    private authStateService: AuthStateService,
     private router: Router
   ) {}
 
   canActivate(): Observable<boolean | UrlTree> {
-    return this.authService.getCurrentUser().pipe(
+    return this.authStateService.getCurrentUser().pipe(
       take(1),
       map(user => {
-        if (!user) {
-          // Not authenticated, allow access
+        if (user?.role === UserRole.Admin) {
           return true;
-        } else {
-          // Already authenticated, redirect to home
-          return this.router.createUrlTree(['/']);
         }
+        return this.router.createUrlTree(['/']);
       })
     );
   }
