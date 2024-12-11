@@ -1,8 +1,7 @@
-import { NgIf } from '@angular/common';
 import { Component, EnvironmentInjector, inject } from '@angular/core';
-import { IonTabs, IonTabBar, IonTabButton, IonIcon, IonLabel } from '@ionic/angular/standalone';
+import { IonIcon, IonLabel, IonTabBar, IonTabButton, IonTabs } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
-import { triangle, ellipse, square, person, logIn } from 'ionicons/icons';
+import { ellipse, logIn, person, square, triangle } from 'ionicons/icons';
 import { AuthService } from 'src/app/services';
 
 @Component({
@@ -10,12 +9,12 @@ import { AuthService } from 'src/app/services';
   templateUrl: 'tabs.page.html',
   styleUrls: ['tabs.page.scss'],
   standalone: true,
-  imports: [IonTabs, IonTabBar, IonTabButton, IonIcon, IonLabel, NgIf],
+  imports: [IonTabs, IonTabBar, IonTabButton, IonIcon, IonLabel],
 })
 export class TabsPage {
   public environmentInjector = inject(EnvironmentInjector);
 
   constructor(private authService: AuthService) {
-    addIcons({triangle,ellipse,square,person,logIn});
+    addIcons({ triangle, ellipse, square, person, logIn });
   }
 }
