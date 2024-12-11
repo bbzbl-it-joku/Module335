@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, Input, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
-import { IonButton, IonButtons, IonContent, IonHeader, IonIcon, IonInput, IonItem, IonLabel, IonList, IonTitle, IonToolbar, ModalController } from '@ionic/angular/standalone';
+import { IonButton, IonButtons, IonContent, IonHeader, IonIcon, IonInput, IonItem, IonLabel, IonList, IonTitle, IonToolbar, ModalController, IonAvatar } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import { closeOutline } from 'ionicons/icons';
 import { User } from 'src/app/models';
@@ -12,7 +12,7 @@ import { AuthStateService, ToastService, UserProfileService } from 'src/app/serv
   templateUrl: './edit-profile.component.html',
   styleUrls: ['./edit-profile.component.scss'],
   standalone: true,
-  imports: [CommonModule, FormsModule, ReactiveFormsModule, IonHeader, IonToolbar, IonButtons, IonButton, IonTitle, IonContent, IonList, IonItem, IonLabel, IonInput, IonIcon]
+  imports: [CommonModule, FormsModule, ReactiveFormsModule, IonHeader, IonToolbar, IonButtons, IonButton, IonTitle, IonContent, IonList, IonLabel, IonInput, IonIcon]
 })
 export class EditProfileComponent implements OnInit {
   @Input({ required: true }) user!: User;
@@ -60,7 +60,8 @@ export class EditProfileComponent implements OnInit {
         this.dismissModal(true);
       } catch (error) {
         console.error('Error updating profile:', error);
-        await this.toastService.presentToast('Error updating profile', 'danger');
+        const errorMessage = error instanceof Error ? error.message : 'An error occurred';
+        await this.toastService.presentToast(errorMessage, 'danger');
       }
     }
   }

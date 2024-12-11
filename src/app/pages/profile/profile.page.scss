@@ -3,6 +3,22 @@
   height: 100px;
   margin: 20px auto;
   border: 3px solid var(--ion-color-primary);
+  overflow: hidden;
+  padding: 2px; // Add padding to center the content
+  background: var(--ion-background-color);
+
+  #svgDiv {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+  }
+
+  ::ng-deep svg {
+    width: 100% !important;
+    height: 100% !important;
+  }
 }
 
 .level-card {

@@ -124,20 +124,6 @@ export class AuthService {
     }
   }
 
-  async updateUsername(username: string): Promise<void> {
-    const user = await this.authStateService.getUserMetadata();
-    if (!user) throw new Error('No user logged in');
-
-    const { error } = await supabase.auth.updateUser({
-      data: { username }
-    });
-
-    if (error) throw error;
-    if (user.id) {
-      await this.loadUserProfile(user.id);
-    }
-  }
-
   async signOut(): Promise<void> {
     await supabase.auth.signOut();
     this.authStateService.clearCurrentUser();

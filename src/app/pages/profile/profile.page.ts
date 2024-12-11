@@ -8,7 +8,7 @@ import { addCircleOutline, homeOutline, keyOutline, logOutOutline, mapOutline, n
 import * as jdenticon from 'jdenticon';
 import { EditProfileComponent } from 'src/app/components/edit-profile/edit-profile.component';
 import { LevelProgress, User } from 'src/app/models';
-import { AlertService, AuthService, AuthStateService, LevelService, UserProfileService } from 'src/app/services';
+import { AlertService, AuthService, AuthStateService, LevelService, ToastService, UserProfileService } from 'src/app/services';
 
 @Component({
   selector: 'app-profile',
@@ -23,6 +23,7 @@ export class ProfilePage implements OnInit {
   levelProgress: LevelProgress | null = null;
 
   constructor(
+    private toastService: ToastService,
     private alertService: AlertService,
     private authService: AuthService,
     private authStateService: AuthStateService,
@@ -40,7 +41,7 @@ export class ProfilePage implements OnInit {
       if (user) {
         this.user = user;
         if (user.email) {
-          const svg = jdenticon.toSvg(user.email, 100);
+          const svg = jdenticon.toSvg(user.email, 95);
           this.avatarSvg = this.sanitizer.bypassSecurityTrustHtml(svg);
         }
       }
@@ -49,7 +50,6 @@ export class ProfilePage implements OnInit {
     // Load level progress
     this.levelService.getLevelProgress().subscribe((progress) => {
       if (progress) {
-        console.log('Level progress:', progress);
         this.levelProgress = progress
       }
     });
@@ -64,7 +64,8 @@ export class ProfilePage implements OnInit {
         this.user.pushNotifications
       );
     } catch (error) {
-      console.error('Error toggling notifications:', error);
+      console.error('Error toggling push notifications:', error);
+      this.toastService.presentToast('Failed to update push notifications', 'danger');
     }
   }
 
@@ -82,10 +83,7 @@ export class ProfilePage implements OnInit {
     if (data?.updated) {
       this.ngOnInit();
     }
-  }
-
-  async changePassword() {
-    // Implement change password logic
+    await modal.dismiss();
   }
 
   async gainXP() {
