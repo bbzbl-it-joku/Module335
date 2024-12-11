@@ -1,7 +1,12 @@
 
+import { Injectable } from '@angular/core';
+import { Location } from 'src/app/models';
 import { supabase } from 'src/app/supabase/supabase.config';
 import { BaseService, QueryResult } from './base.service';
 
+@Injectable({
+  providedIn: 'root'
+})
 export class LocationService extends BaseService<Location> {
   protected tableName = 'location';
 

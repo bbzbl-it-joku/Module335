@@ -1,13 +1,16 @@
-import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable } from 'rxjs';
-import { ISupabaseUser, IUserProfile, User } from 'src/app/models';
-import { supabase } from 'src/app/supabase/supabase.config';
+import { Injectable } from "@angular/core";
+import { BehaviorSubject, Observable } from "rxjs";
+import { ISupabaseUser, IUserProfile, User } from "src/app/models";
+import { supabase } from "src/app/supabase/supabase.config";
+import { AuthService } from "./auth.service";
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthStateService {
   private currentUser = new BehaviorSubject<User | null>(null);
+
+  constructor() { }
 
   getCurrentUser(): Observable<User | null> {
     return this.currentUser.asObservable();

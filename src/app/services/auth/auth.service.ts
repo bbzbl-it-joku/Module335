@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { Session, User as SupabaseAuthUser } from '@supabase/supabase-js';
-import { Observable } from 'rxjs';
-import { User } from 'src/app/models';
+import { firstValueFrom, Observable } from 'rxjs';
+import { ISupabaseUser, User } from 'src/app/models';
 import { AuthStateService, ToastService, UserProfileService } from 'src/app/services';
 import { supabase } from 'src/app/supabase/supabase.config';
 
@@ -11,14 +11,36 @@ import { supabase } from 'src/app/supabase/supabase.config';
   providedIn: 'root'
 })
 export class AuthService {
+  private initialized = false;
+
   constructor(
     private toastService: ToastService,
     private router: Router,
     private userProfileService: UserProfileService,
     private authStateService: AuthStateService
   ) {
-    this.loadUser();
-    this.setupAuthListener();
+    this.initializeAuth();
+  }
+
+  private async initializeAuth() {
+    if (this.initialized) return;
+
+    try {
+      // Set up auth listener first
+      this.setupAuthListener();
+
+      // Then check for existing session
+      const { data: { session } } = await supabase.auth.getSession();
+
+      if (session?.user) {
+        await this.loadUserProfile(session.user.id);
+      }
+
+      this.initialized = true;
+    } catch (error) {
+      console.error('Error initializing auth:', error);
+      this.authStateService.clearCurrentUser();
+    }
   }
 
   getCurrentUser(): Observable<User | null> {
@@ -65,15 +87,23 @@ export class AuthService {
 
   private async loadUserProfile(userId: string): Promise<void> {
     try {
-      const userMetadata = await this.authStateService.getUserMetadata();
-      if (!userMetadata) throw new Error('No user found');
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) throw new Error('No user found');
+
+      const authUser: ISupabaseUser = {
+        id: user.id,
+        email: user.email!,
+        username: user.user_metadata?.['username'],
+        created_at: user.created_at!,
+        updated_at: user.updated_at || user.created_at!,
+      };
 
       await this.userProfileService.loadProfile(userId);
-      const profile = await this.userProfileService.getById(userId);
+      const profile = await firstValueFrom(this.userProfileService.getCurrentProfile());
 
-      if (profile.error || !profile.data) throw new Error('Failed to load profile');
+      if (!profile) throw new Error('Failed to load profile');
 
-      await this.authStateService.updateCurrentUser(userMetadata, profile.data);
+      await this.authStateService.updateCurrentUser(authUser, profile);
     } catch (error) {
       console.error('Error loading user profile:', error);
       this.toastService.presentToast('Failed to load user profile', 'danger');

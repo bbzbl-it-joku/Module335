@@ -1,7 +1,12 @@
 
+import { Injectable } from '@angular/core';
+import { Notification } from 'src/app/models';
 import { supabase } from 'src/app/supabase/supabase.config';
 import { BaseService, QueryResult, QueryResultList } from './base.service';
 
+@Injectable({
+  providedIn: 'root'
+})
 export class NotificationService extends BaseService<Notification> {
   protected tableName = 'notifications';
 

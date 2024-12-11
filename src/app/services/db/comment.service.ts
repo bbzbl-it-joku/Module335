@@ -1,7 +1,12 @@
 
+import { Injectable } from '@angular/core';
+import { Comment } from 'src/app/models';
 import { supabase } from 'src/app/supabase/supabase.config';
 import { BaseService, QueryResult, QueryResultList } from './base.service';
 
+@Injectable({
+  providedIn: 'root'
+})
 export class CommentService extends BaseService<Comment> {
   protected tableName = 'comment';
 

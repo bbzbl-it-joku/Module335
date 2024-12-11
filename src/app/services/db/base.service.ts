@@ -1,3 +1,4 @@
+import { Injectable } from '@angular/core';
 import { PostgrestError } from '@supabase/supabase-js';
 
 export interface QueryResult<T> {
@@ -10,6 +11,7 @@ export interface QueryResultList<T> {
   error: PostgrestError | null;
 }
 
+@Injectable()
 export abstract class BaseService<T> {
   protected abstract tableName: string;
 

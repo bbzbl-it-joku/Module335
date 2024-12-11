@@ -1,8 +1,12 @@
 
+import { Injectable } from '@angular/core';
 import { Reaction, ReactionType } from 'src/app/models';
 import { supabase } from 'src/app/supabase/supabase.config';
 import { BaseService, QueryResult, QueryResultList } from './base.service';
 
+@Injectable({
+  providedIn: 'root'
+})
 export class ReactionService extends BaseService<Reaction> {
   protected tableName = 'reaction';
 
