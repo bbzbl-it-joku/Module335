@@ -1,17 +1,7 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable, Subscription } from 'rxjs';
-import { UserProfileService } from './user-profile.service';
-import { ActionPoints } from 'src/app/models';
-import { ToastService } from '../util/toast.service';
-import { AuthStateService } from '../auth';
-
-export interface LevelProgress {
-  currentLevel: number;
-  currentPoints: number;
-  pointsToNextLevel: number;
-  progressPercentage: number;
-  totalPointsRequired: number;
-}
+import { ActionPoints, LevelProgress } from 'src/app/models';
+import { AuthStateService, ToastService, UserProfileService } from 'src/app/services';
 
 @Injectable({
   providedIn: 'root'

@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { AlertController, AlertInput } from '@ionic/angular/standalone';
+import { AlertController } from '@ionic/angular/standalone';
 
 type AlertInputTypes = 'text' | 'textarea' | 'number' | 'email' | 'password' | 'tel' | 'url' | 'date' | 'time' | 'datetime-local' | 'month' | 'week' | 'checkbox' | 'radio';
 
@@ -7,7 +7,7 @@ type AlertInputTypes = 'text' | 'textarea' | 'number' | 'email' | 'password' | '
   providedIn: 'root'
 })
 export class AlertService {
-  constructor(private alertController: AlertController) {}
+  constructor(private alertController: AlertController) { }
 
   async presentAlert({
     header = '',

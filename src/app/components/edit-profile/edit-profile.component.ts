@@ -2,11 +2,10 @@ import { CommonModule } from '@angular/common';
 import { Component, Input, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { IonButton, IonButtons, IonContent, IonHeader, IonIcon, IonInput, IonItem, IonLabel, IonList, IonTitle, IonToolbar, ModalController } from '@ionic/angular/standalone';
-import { ToastService, UserProfileService } from 'src/app/services';
-import { User } from '../../models/user.model';
 import { addIcons } from 'ionicons';
 import { closeOutline } from 'ionicons/icons';
-import { AuthStateService } from 'src/app/services/auth';
+import { User } from 'src/app/models';
+import { AuthStateService, ToastService, UserProfileService } from 'src/app/services';
 
 @Component({
   selector: 'app-edit-profile',

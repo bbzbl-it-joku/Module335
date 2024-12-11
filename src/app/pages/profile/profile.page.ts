@@ -4,16 +4,11 @@ import { FormsModule } from '@angular/forms';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { IonAvatar, IonButton, IonButtons, IonCard, IonCardContent, IonCardHeader, IonCardSubtitle, IonCardTitle, IonContent, IonHeader, IonIcon, IonItem, IonItemDivider, IonItemGroup, IonLabel, IonList, IonNote, IonProgressBar, IonTitle, IonToggle, IonToolbar, ModalController } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
-import { homeOutline, keyOutline, logOutOutline, mapOutline, notificationsOutline, personOutline, trophyOutline, addCircleOutline } from 'ionicons/icons';
+import { addCircleOutline, homeOutline, keyOutline, logOutOutline, mapOutline, notificationsOutline, personOutline, trophyOutline } from 'ionicons/icons';
 import * as jdenticon from 'jdenticon';
 import { EditProfileComponent } from 'src/app/components/edit-profile/edit-profile.component';
-import { User } from '../../models/user.model';
-import { AuthStateService } from '../../services/auth/auth-state.service';
-import { AuthService } from '../../services/auth/auth.service';
-import { LevelProgress, LevelService } from '../../services/db/level.service';
-import { UserProfileService } from '../../services/db/user-profile.service';
-import { AlertService } from '../../services/util/alert.service';
-import { UserRole } from 'src/app/models';
+import { LevelProgress, User } from 'src/app/models';
+import { AlertService, AuthService, AuthStateService, LevelService, UserProfileService } from 'src/app/services';
 
 @Component({
   selector: 'app-profile',

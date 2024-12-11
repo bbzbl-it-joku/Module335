@@ -5,7 +5,7 @@ import { ToastController } from '@ionic/angular/standalone';
   providedIn: 'root'
 })
 export class ToastService {
-  constructor(private toastController: ToastController) {}
+  constructor(private toastController: ToastController) { }
 
   async presentToast(message: string, color: string = 'primary') {
     const toast = await this.toastController.create({

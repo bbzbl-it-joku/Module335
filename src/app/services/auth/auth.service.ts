@@ -1,12 +1,11 @@
 import { Injectable } from '@angular/core';
+import { Router } from '@angular/router';
 import { Session, User as SupabaseAuthUser } from '@supabase/supabase-js';
 import { Observable } from 'rxjs';
-import { User } from '../../models';
-import { supabase } from '../../supabase/supabase.config';
-import { ToastService } from '../util/toast.service';
-import { Router } from '@angular/router';
-import { UserProfileService } from '../';
-import { AuthStateService } from './auth-state.service';
+import { User } from 'src/app/models';
+import { AuthStateService, ToastService, UserProfileService } from 'src/app/services';
+import { supabase } from 'src/app/supabase/supabase.config';
+
 
 @Injectable({
   providedIn: 'root'

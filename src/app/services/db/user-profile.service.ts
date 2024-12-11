@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
-import { BaseService, QueryResult } from './base.service';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { UserProfile, IUserProfile, UserRole } from 'src/app/models';
+import { IUserProfile, UserProfile, UserRole } from 'src/app/models';
 import { supabase } from 'src/app/supabase/supabase.config';
+import { BaseService, QueryResult } from './base.service';
 
 @Injectable({
   providedIn: 'root'

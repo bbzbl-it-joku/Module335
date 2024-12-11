@@ -1,6 +1,6 @@
 
 import { supabase } from 'src/app/supabase/supabase.config';
-import { BaseService, QueryResult, QueryResultList } from './base.service';
+import { BaseService, QueryResult } from './base.service';
 
 export class LocationService extends BaseService<Location> {
   protected tableName = 'location';

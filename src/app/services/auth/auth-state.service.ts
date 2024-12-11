@@ -1,8 +1,7 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { supabase } from '../../supabase/supabase.config';
-import { ISupabaseUser, IUserProfile } from '../../models/types/user.type';
-import { User } from '../../models/user.model';
+import { ISupabaseUser, IUserProfile, User } from 'src/app/models';
+import { supabase } from 'src/app/supabase/supabase.config';
 
 @Injectable({
   providedIn: 'root'

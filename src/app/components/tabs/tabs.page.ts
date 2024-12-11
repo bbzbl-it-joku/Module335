@@ -3,7 +3,7 @@ import { Component, EnvironmentInjector, inject } from '@angular/core';
 import { IonTabs, IonTabBar, IonTabButton, IonIcon, IonLabel } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import { triangle, ellipse, square, person, logIn } from 'ionicons/icons';
-import { AuthService } from 'src/app/services/auth/auth.service';
+import { AuthService } from 'src/app/services';
 
 @Component({
   selector: 'app-tabs',

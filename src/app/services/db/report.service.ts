@@ -1,7 +1,7 @@
 
+import { ReportStatus } from 'src/app/models';
 import { supabase } from 'src/app/supabase/supabase.config';
 import { BaseService, QueryResult, QueryResultList } from './base.service';
-import { ReportStatus } from 'src/app/models';
 
 export class ReportService extends BaseService<Report> {
   protected tableName = 'reports';

@@ -2,13 +2,11 @@ import { CommonModule } from '@angular/common';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { IonButton, IonInput, IonCard, IonCardContent, IonCardHeader, IonCardSubtitle, IonCardTitle, IonContent, IonHeader, IonIcon, IonItem, IonLabel, IonText, IonTitle, IonToolbar } from "@ionic/angular/standalone";
+import { IonButton, IonCard, IonCardContent, IonCardHeader, IonCardSubtitle, IonCardTitle, IonContent, IonHeader, IonIcon, IonInput, IonItem, IonLabel, IonText, IonTitle, IonToolbar } from "@ionic/angular/standalone";
 import { addIcons } from 'ionicons';
 import { logIn, personAdd } from 'ionicons/icons';
 import { Subscription } from 'rxjs';
-import { AuthStateService } from '../../services/auth/auth-state.service';
-import { AuthService } from '../../services/auth/auth.service';
-import { ToastService } from '../../services/util/toast.service';
+import { AuthService, AuthStateService, ToastService } from 'src/app/services';
 
 @Component({
   selector: 'app-signup',
