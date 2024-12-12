@@ -1,21 +1,26 @@
 :host {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+
   ion-header {
-    ion-segment {
-      padding: 4px 0;
-    }
+    flex-shrink: 0;
   }
 
-  // Ensure smooth animation
-  .animate-height {
-    transition: height 300ms ease-in-out;
+  ion-content {
+    flex: 1;
+    --background: none;
+    height: calc(100% - var(--ion-safe-area-top, 0px));
   }
-}
-:host {
+
+  .map-container {
+    height: 100%;
+    width: 100%;
+    position: relative;
+    display: block;
+  }
+
   ion-segment {
     padding: 8px;
-  }
-
-  div {
-    display: block;
   }
 }

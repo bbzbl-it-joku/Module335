@@ -21,15 +21,14 @@
   </div>
 </ion-header>
 
-<ion-content [fullscreen]="true">
-  <div *ngIf="mode === 'map'">
-    <app-report-map />
+<ion-content [fullscreen]="true" class="ion-content-height">
+  <div class="map-container" *ngIf="mode === 'map'">
+    <app-report-map></app-report-map>
   </div>
   <div *ngIf="mode === 'list'">
-    <app-report-list />
+    <app-report-list></app-report-list>
   </div>
-
   <ng-container *ngIf="user !== null">
-    <app-report-dialog type="create" triggerPostfix="reports" />
+    <app-report-dialog type="create" triggerPostfix="reports"></app-report-dialog>
   </ng-container>
 </ion-content>
