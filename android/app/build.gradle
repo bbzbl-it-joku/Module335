@@ -1,10 +1,10 @@
 apply plugin: 'com.android.application'
 
 android {
-    namespace "ionic.module335"
+    namespace "com.tuka.app"
     compileSdk rootProject.ext.compileSdkVersion
     defaultConfig {
-        applicationId "ionic.module335"
+        applicationId "com.tuka.app"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1

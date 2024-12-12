@@ -1,4 +1,4 @@
-package ionic.module335;
+package com.tuka.app;
 
 import com.getcapacitor.BridgeActivity;
 
