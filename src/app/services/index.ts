@@ -11,3 +11,6 @@ export * from './db/user-profile.service';
 
 export * from './util/alert.service';
 export * from './util/toast.service';
+
+export * from './geolocation.service';
+export * from './local-storage.service';

@@ -1,0 +1,29 @@
+
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Select Location</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="dismiss()">
+        <ion-icon name="close-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div class="map-container">
+    <div #map id="map"></div>
+    <ion-button class="locate-button" (click)="getCurrentLocation()" [disabled]="isLoading">
+      <ion-icon name="locate-outline"></ion-icon>
+      <ion-spinner *ngIf="isLoading"></ion-spinner>
+    </ion-button>
+  </div>
+  <div class="ion-padding">
+    <p class="location-text" *ngIf="currentAddress">
+      Selected location: {{ currentAddress }}
+    </p>
+    <ion-button expand="block" (click)="confirmLocation()" [disabled]="!selectedLocation || isLoading">
+      Confirm Location
+    </ion-button>
+  </div>
+</ion-content>

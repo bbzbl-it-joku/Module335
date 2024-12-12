@@ -16,6 +16,15 @@ export const routes: Routes = [
         path: 'reports',
         loadComponent: () =>
           import('./reports/reports.page').then((m) => m.ReportsPage),
+        children: [
+          {
+            path: ':report_id',
+            loadComponent: () =>
+              import('../report-details/report-details.page').then(
+                (m) => m.ReportDetailsPage
+              ),
+          },
+        ],
       },
       {
         path: 'ranking',

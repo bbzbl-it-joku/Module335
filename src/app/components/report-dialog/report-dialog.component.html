@@ -6,67 +6,100 @@
   </ion-fab>
 </ng-container>
 
-<ion-modal trigger="{{ type === 'edit' ? trigger : 'fab-create-report-' + triggerPostfix }}" (willDismiss)="onWillDismiss($event)">
+<ion-modal trigger="{{ type === 'edit' ? trigger : 'fab-create-report-' + triggerPostfix }}"
+  (willDismiss)="onWillDismiss($event)">
   <ng-template>
-    <ion-header class="ion-padding">
+    <ion-header>
       <ion-toolbar>
-        <ion-buttons slot="start">
-          <ion-button (click)="cancel()" color="danger">Cancel</ion-button>
-        </ion-buttons>
+        <ion-title>{{ getModalTitle() }}</ion-title>
         <ion-buttons slot="end">
-          <ion-button (click)="confirm()" [strong]="true">Confirm</ion-button>
+          <ion-button (click)="cancel()">
+            <ion-icon name="close-outline"></ion-icon>
+          </ion-button>
         </ion-buttons>
       </ion-toolbar>
     </ion-header>
+
     <ion-content class="ion-padding">
-      <ion-title class="ion-text-center ion-margin-bottom">{{ getModalTitle() }}</ion-title>
-
       <form [formGroup]="reportForm">
-        <ion-item>
-          <ion-label position="floating">Title</ion-label>
-          <ion-input type="text" formControlName="title">
-          </ion-input>
-        </ion-item>
-        <ion-text color="danger" *ngIf="title?.invalid && (title?.dirty || title?.touched)">
-          <small class="ion-padding-start">
-            Title is required
-          </small>
-        </ion-text>
+        <ion-list class="ion-padding">
+          <div class="ion-padding-top">
+            <ion-label position="stacked">Title</ion-label>
+            <ion-input type="text" formControlName="title" [clearInput]="true" placeholder="Enter title">
+            </ion-input>
+            <div *ngIf="title?.invalid && (title?.dirty || title?.touched)" class="error-message">
+              Title is required
+            </div>
+          </div>
 
-        <ion-item>
-          <ion-label position="floating">Category</ion-label>
-          <ion-select formControlName="category" interface="action-sheet">
-            <ion-select-option *ngFor="let category of categories" [value]="category">
-              {{ category.name }}
-            </ion-select-option>
-          </ion-select>
-        </ion-item>
-        <ion-text color="danger" *ngIf="category?.invalid && (category?.dirty || category?.touched)">
-          <small class="ion-padding-start">
-            Category is required
-          </small>
-        </ion-text>
+          <div class="ion-padding-top">
+            <ion-label position="stacked">Description</ion-label>
+            <ion-textarea formControlName="description" rows="4" placeholder="Enter report description...">
+            </ion-textarea>
+            <div *ngIf="description?.invalid && (description?.dirty || description?.touched)" class="error-message">
+              Description is required
+            </div>
+          </div>
 
-        <ion-item>
-          <ion-label position="floating">Description</ion-label>
-          <ion-textarea formControlName="description" rows="4" placeholder="Enter report description...">
-          </ion-textarea>
-        </ion-item>
-        <ion-text color="danger" *ngIf="description?.invalid && (description?.dirty || description?.touched)">
-          <small class="ion-padding-start">
-            Description is required
-          </small>
-        </ion-text>
+          <div class="ion-padding-top">
+            <ion-label position="stacked">Category</ion-label>
+            <ion-button class="category-button" (click)="openCategoryDialog()" fill="solid">
+              {{ selectedCategory?.name || 'Select Category' }}
+              <ion-icon name="chevron-forward" slot="end"></ion-icon>
+            </ion-button>
+            <div *ngIf="category?.invalid && (category?.dirty || category?.touched)" class="error-message">
+              Category is required
+            </div>
+          </div>
 
-        <ion-item *ngIf="type === 'edit'">
-          <ion-label position="floating">Status</ion-label>
-          <ion-select formControlName="status" interface="action-sheet">
-            <ion-select-option *ngFor="let status of reportStatuses" [value]="status">
-              {{ status }}
-            </ion-select-option>
-          </ion-select>
-        </ion-item>
+          <div class="ion-padding-top">
+            <ion-label position="stacked">Location</ion-label>
+            <ion-button class="category-button" (click)="openMapModal()" fill="solid">
+              Select Location
+              <ion-icon name="map" slot="end"></ion-icon>
+            </ion-button>
+          </div>
+
+          <div class="ion-padding-top" *ngIf="type === 'edit' && user?.isAdmin()">
+            <ion-label position="stacked">Status</ion-label>
+            <ion-select formControlName="status" interface="action-sheet" class="status-select">
+              <ion-select-option *ngFor="let status of reportStatuses" [value]="status">
+                {{ status }}
+              </ion-select-option>
+            </ion-select>
+          </div>
+
+          <ion-button expand="block" (click)="confirm()" [disabled]="reportForm.invalid">
+            {{ type === 'edit' ? 'Save Changes' : 'Create Report' }}
+          </ion-button>
+        </ion-list>
       </form>
+    </ion-content>
+  </ng-template>
+</ion-modal>
+
+<!-- Category Selection Modal -->
+<ion-modal #categoryModal (willDismiss)="onCategoryDismiss($event)">
+  <ng-template>
+    <ion-header>
+      <ion-toolbar>
+        <ion-title>Select Category</ion-title>
+        <ion-buttons slot="end">
+          <ion-button (click)="confirmCategory()">
+            <ion-icon name="checkmark"></ion-icon>
+          </ion-button>
+        </ion-buttons>
+      </ion-toolbar>
+    </ion-header>
+
+    <ion-content class="ion-padding">
+      <ion-list>
+        <ion-item *ngFor="let cat of categories" (click)="selectCategory(cat)"
+          [class.selected]="selectedCategory?.id === cat.id">
+          <ion-label>{{ cat.name }}</ion-label>
+          <ion-icon *ngIf="selectedCategory?.id === cat.id" name="checkmark" slot="end"></ion-icon>
+        </ion-item>
+      </ion-list>
     </ion-content>
   </ng-template>
 </ion-modal>

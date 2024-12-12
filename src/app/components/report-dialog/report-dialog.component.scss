@@ -1,0 +1,39 @@
+.error-message {
+  color: var(--ion-color-danger);
+  font-size: 0.8em;
+  margin: 8px 16px;
+}
+
+ion-label {
+  margin-bottom: 8px;
+  color: var(--ion-color-medium);
+}
+
+ion-input, ion-textarea {
+  --padding-start: 16px;
+  --background: var(--ion-color-light);
+  --border-radius: 8px;
+  margin-top: 4px;
+}
+
+ion-button {
+  margin: 16px 0;
+  --border-radius: 8px;
+  --foreground: var(--ion-color-white);
+  --color: var(--ion-color-white);
+}
+
+.selected {
+  --background: var(--ion-color-light);
+}
+
+.category-button {
+  width: 100%;
+  justify-content: space-between;
+  --padding-start: 16px;
+  --padding-end: 16px;
+  --background: var(--ion-color-light);
+  --foreground: var(--ion-color-light-contrast);
+  --border-radius: 8px;
+  margin-top: 4px;
+}
