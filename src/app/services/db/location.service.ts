@@ -10,6 +10,12 @@ import { BaseService, QueryResult } from './base.service';
 export class LocationService extends BaseService<Location> {
   protected tableName = 'location';
 
+  async getAll(): Promise<QueryResult<Location[]>> {
+    return await supabase
+      .from(this.tableName)
+      .select('*');
+  }
+
   async getByReportId(reportId: string): Promise<QueryResult<Location>> {
     return await supabase
       .from(this.tableName)

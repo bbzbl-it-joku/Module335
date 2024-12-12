@@ -1,6 +1,7 @@
 import { Component, OnInit } from "@angular/core";
 import { GoogleMap } from "@capacitor/google-maps";
-import { GeolocationService, ReportService, ToastService } from "src/app/services";
+import { Location } from "src/app/models";
+import { GeolocationService, LocationService, ReportService, ToastService } from "src/app/services";
 
 @Component({
   selector: 'app-report-map',
@@ -10,14 +11,20 @@ import { GeolocationService, ReportService, ToastService } from "src/app/service
 })
 export class ReportMapComponent implements OnInit {
   private map!: GoogleMap;
+  private locations: Location[] = [];
 
   constructor(
     private geolocationService: GeolocationService,
     private reportService: ReportService,
+    private locationService: LocationService,
     private toastService: ToastService,
-  ) {}
+  ) { }
 
   async ngOnInit() {
+    this.locationService.getAll().then((result) => {
+      this.locations = result.data as Location[];
+    });
+
     await this.setupMap();
   }
 
@@ -63,19 +70,10 @@ export class ReportMapComponent implements OnInit {
             lat: location.latitude,
             lng: location.longitude
           },
-          zoom: 14,
-          disableDefaultUI: false,
+          zoom: 15,
+          disableDefaultUI: true
         },
         forceCreate: true
-      });
-
-      // Add marker for current location
-      await this.map.addMarker({
-        coordinate: {
-          lat: location.latitude,
-          lng: location.longitude
-        },
-        title: 'Your location'
       });
 
       // Force refresh after a short delay
@@ -86,6 +84,24 @@ export class ReportMapComponent implements OnInit {
     } catch (error) {
       console.error('Error setting up map:', error);
       this.toastService.presentToast('Failed to initialize map', 'danger');
+    }
+  }
+
+  async addAllMarkers() {
+    if (!this.map) {
+      return;
+    }
+
+    for (const location of this.locations) {
+      const report = (await this.reportService.getById(location.reportId)).data;
+      await this.map.addMarker({
+        coordinate: {
+          lat: location.latitude,
+          lng: location.longitude
+        },
+        title: report?.title,
+        snippet: report?.description,
+      });
     }
   }
 
