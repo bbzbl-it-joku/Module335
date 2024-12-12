@@ -16,6 +16,7 @@ export class SplashPage implements OnInit {
   constructor(
     private router: Router,
   ) {
+
     addIcons({ alertCircleOutline });
   }
 

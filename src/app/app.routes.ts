@@ -1,10 +1,12 @@
 import { Routes } from '@angular/router';
 import { NoAuthGuard } from './guards/no-auth.guard';
+import { NativeGuard } from './guards/native.guard';
 
 export const routes: Routes = [
   {
     path: 'splash',
-    loadComponent: () => import('./pages/splash/splash.page').then( m => m.SplashPage)
+    loadComponent: () => import('./pages/splash/splash.page').then( m => m.SplashPage),
+    canActivate: [NativeGuard],
   },
   {
     path: '',
