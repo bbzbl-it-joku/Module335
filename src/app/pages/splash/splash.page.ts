@@ -4,7 +4,6 @@ import { Router } from '@angular/router';
 import { IonContent, IonIcon } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import { alertCircleOutline } from 'ionicons/icons';
-import { AuthService } from 'src/app/services';
 
 @Component({
   selector: 'app-splash',
@@ -16,7 +15,6 @@ import { AuthService } from 'src/app/services';
 export class SplashPage implements OnInit {
   constructor(
     private router: Router,
-    private authService: AuthService
   ) {
     addIcons({ alertCircleOutline });
   }
@@ -30,13 +28,7 @@ export class SplashPage implements OnInit {
       // Wait for animation duration
       await this.delay(3000);
 
-      // Check auth state
-      const { data: { session } } = await this.authService.getSession();
-
-      // Navigate based on auth state
-      if (session) {
-        await this.router.navigate(['/tabs']);
-      }
+      await this.router.navigate(['/tabs']);
     } catch (error) {
       console.error('Error initializing app:', error);
       await this.router.navigate(['/tabs']);
