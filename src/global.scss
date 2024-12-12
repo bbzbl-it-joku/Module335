@@ -35,3 +35,52 @@
 /* @import "@ionic/angular/css/palettes/dark.always.css"; */
 /* @import "@ionic/angular/css/palettes/dark.class.css"; */
 @import '@ionic/angular/css/palettes/dark.system.css';
+
+:root {
+	--ion-color-first: #FFD700;
+	--ion-color-first-rgb: 255,215,0;
+	--ion-color-first-contrast: #000000;
+	--ion-color-first-contrast-rgb: 0,0,0;
+	--ion-color-first-shade: #e0bd00;
+	--ion-color-first-tint: #ffdb1a;
+  --ion-color-second: #C0C0C0;
+  --ion-color-second-rgb: 192,192,192;
+  --ion-color-second-contrast: #000000;
+  --ion-color-second-contrast-rgb: 0,0,0;
+  --ion-color-second-shade: #a9a9a9;
+  --ion-color-second-tint: #c6c6c6;
+	--ion-color-third: #CD7F32;
+	--ion-color-third-rgb: 205,127,50;
+	--ion-color-third-contrast: #000000;
+	--ion-color-third-contrast-rgb: 0,0,0;
+	--ion-color-third-shade: #b4702c;
+	--ion-color-third-tint: #d28c47;
+}
+
+.ion-color-first {
+	--ion-color-base: var(--ion-color-first);
+	--ion-color-base-rgb: var(--ion-color-first-rgb);
+	--ion-color-contrast: var(--ion-color-first-contrast);
+	--ion-color-contrast-rgb: var(--ion-color-first-contrast-rgb);
+	--ion-color-shade: var(--ion-color-first-shade);
+	--ion-color-tint: var(--ion-color-first-tint);
+}
+
+.ion-color-second {
+  --ion-color-base: var(--ion-color-second);
+	--ion-color-base-rgb: var(--ion-color-second-rgb);
+	--ion-color-contrast: var(--ion-color-second-contrast);
+	--ion-color-contrast-rgb: var(--ion-color-second-contrast-rgb);
+	--ion-color-shade: var(--ion-color-second-shade);
+	--ion-color-tint: var(--ion-color-second-tint);
+}
+
+
+  .ion-color-third {
+    --ion-color-base: var(--ion-color-third);
+    --ion-color-base-rgb: var(--ion-color-third-rgb);
+    --ion-color-contrast: var(--ion-color-third-contrast);
+    --ion-color-contrast-rgb: var(--ion-color-third-contrast-rgb);
+    --ion-color-shade: var(--ion-color-third-shade);
+    --ion-color-tint: var(--ion-color-third-tint);
+}

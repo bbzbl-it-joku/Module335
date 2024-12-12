@@ -166,4 +166,19 @@ export class AuthService {
       await this.loadUserProfile(session.user.id);
     }
   }
+
+  async getUsernameById(userId: string): Promise<string | null> {
+    try {
+      const { data, error } = await supabase
+        .rpc('get_username_by_id', {
+          user_id: userId
+        });
+
+      if (error) throw error;
+      return data;
+    } catch (error) {
+      console.error('Error getting username:', error);
+      return null;
+    }
+  }
 }

@@ -1,0 +1,72 @@
+<ng-container *ngIf="type !== 'edit'">
+  <ion-fab vertical="bottom" horizontal="end" slot="fixed" style="position: fixed;">
+    <ion-fab-button id="fab-create-report-{{triggerPostfix}}">
+      <ion-icon name="add"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
+</ng-container>
+
+<ion-modal trigger="{{ type === 'edit' ? trigger : 'fab-create-report-' + triggerPostfix }}" (willDismiss)="onWillDismiss($event)">
+  <ng-template>
+    <ion-header class="ion-padding">
+      <ion-toolbar>
+        <ion-buttons slot="start">
+          <ion-button (click)="cancel()" color="danger">Cancel</ion-button>
+        </ion-buttons>
+        <ion-buttons slot="end">
+          <ion-button (click)="confirm()" [strong]="true">Confirm</ion-button>
+        </ion-buttons>
+      </ion-toolbar>
+    </ion-header>
+    <ion-content class="ion-padding">
+      <ion-title class="ion-text-center ion-margin-bottom">{{ getModalTitle() }}</ion-title>
+
+      <form [formGroup]="reportForm">
+        <ion-item>
+          <ion-label position="floating">Title</ion-label>
+          <ion-input type="text" formControlName="title">
+          </ion-input>
+        </ion-item>
+        <ion-text color="danger" *ngIf="title?.invalid && (title?.dirty || title?.touched)">
+          <small class="ion-padding-start">
+            Title is required
+          </small>
+        </ion-text>
+
+        <ion-item>
+          <ion-label position="floating">Category</ion-label>
+          <ion-select formControlName="category" interface="action-sheet">
+            <ion-select-option *ngFor="let category of categories" [value]="category">
+              {{ category.name }}
+            </ion-select-option>
+          </ion-select>
+        </ion-item>
+        <ion-text color="danger" *ngIf="category?.invalid && (category?.dirty || category?.touched)">
+          <small class="ion-padding-start">
+            Category is required
+          </small>
+        </ion-text>
+
+        <ion-item>
+          <ion-label position="floating">Description</ion-label>
+          <ion-textarea formControlName="description" rows="4" placeholder="Enter report description...">
+          </ion-textarea>
+        </ion-item>
+        <ion-text color="danger" *ngIf="description?.invalid && (description?.dirty || description?.touched)">
+          <small class="ion-padding-start">
+            Description is required
+          </small>
+        </ion-text>
+
+        <ion-item *ngIf="type === 'edit'">
+          <ion-label position="floating">Status</ion-label>
+          <ion-select formControlName="status" interface="action-sheet">
+            <ion-select-option *ngFor="let status of reportStatuses" [value]="status">
+              {{ status }}
+            </ion-select-option>
+          </ion-select>
+        </ion-item>
+      </form>
+    </ion-content>
+  </ng-template>
+</ion-modal>

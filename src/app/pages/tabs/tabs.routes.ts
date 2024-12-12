@@ -13,14 +13,14 @@ export const routes: Routes = [
           import('./dashboard/dashboard.page').then((m) => m.DashboardPage),
       },
       {
-        path: 'tab2',
+        path: 'reports',
         loadComponent: () =>
-          import('../tab2/tab2.page').then((m) => m.Tab2Page),
+          import('./reports/reports.page').then((m) => m.ReportsPage),
       },
       {
-        path: 'tab3',
+        path: 'ranking',
         loadComponent: () =>
-          import('../tab3/tab3.page').then((m) => m.Tab3Page),
+          import('./rankings/rankings.page').then((m) => m.RankingsPage),
         canActivate: [AuthGuard],
       },
       {

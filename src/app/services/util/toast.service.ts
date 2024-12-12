@@ -19,6 +19,22 @@ export class ToastService {
     await toast.present();
   }
 
+  async presentToastWithOptions({
+    message = '',
+    color = 'success',
+    duration = 5000,
+  }) {
+    const toast = await this.toastController.create({
+      message,
+      color,
+      duration,
+      position: 'top',
+      swipeGesture: 'vertical'
+    });
+
+    await toast.present();
+  }
+
   // Helper method to dismiss all toasts
   async dismissAllToasts() {
     try {

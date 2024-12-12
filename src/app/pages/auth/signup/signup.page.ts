@@ -38,7 +38,7 @@ export class SignupPage implements OnInit, OnDestroy {
   ngOnInit() {
     this.authSubscription = this.authStateService.getCurrentUser().subscribe(user => {
       if (user) {
-        this.router.navigate(['/tabs/tab1']);
+        this.router.navigate(['/']);
       }
     });
   }
@@ -56,7 +56,7 @@ export class SignupPage implements OnInit, OnDestroy {
         if (error) throw error;
 
         await this.toastService.presentToast('Account created successfully!', 'success');
-        await this.router.navigate(['/tabs/tab1']);
+        await this.router.navigate(['/']);
       } catch (error) {
         console.error('Signup error:', error);
         const errorMessage = error instanceof Error ? error.message : 'Failed to create account. Please try again.';

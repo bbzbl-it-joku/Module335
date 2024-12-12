@@ -1,7 +1,7 @@
 import { Component, EnvironmentInjector, inject } from '@angular/core';
 import { IonIcon, IonLabel, IonTabBar, IonTabButton, IonTabs } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
-import { ellipse, logIn, person, square, triangle, home } from 'ionicons/icons';
+import { ellipse, logIn, person, square, triangle, home, documentTextOutline, trophy } from 'ionicons/icons';
 import { AuthService } from 'src/app/services';
 
 @Component({
@@ -15,6 +15,6 @@ export class TabsPage {
   public environmentInjector = inject(EnvironmentInjector);
 
   constructor(private authService: AuthService) {
-    addIcons({ home, ellipse, square, person });
+    addIcons({home,documentTextOutline,trophy,person,square,ellipse});
   }
 }

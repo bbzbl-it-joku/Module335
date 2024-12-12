@@ -1,0 +1,21 @@
+:host {
+  ion-header {
+    ion-segment {
+      padding: 4px 0;
+    }
+  }
+
+  // Ensure smooth animation
+  .animate-height {
+    transition: height 300ms ease-in-out;
+  }
+}
+:host {
+  ion-segment {
+    padding: 8px;
+  }
+
+  div {
+    display: block;
+  }
+}

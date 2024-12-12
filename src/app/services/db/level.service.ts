@@ -55,7 +55,7 @@ export class LevelService {
   /**
    * Calculate level from total points, ensuring minimum level is 1
    */
-  private getLevelFromPoints(totalXP: number): number {
+  getLevelFromPoints(totalXP: number): number {
     if (totalXP <= 0) return this.MIN_LEVEL;
 
     let level = 1;

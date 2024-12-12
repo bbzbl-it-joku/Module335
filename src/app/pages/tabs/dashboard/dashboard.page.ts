@@ -2,16 +2,17 @@ import { AsyncPipe, CommonModule, NgIf } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { IonBadge, IonButton, IonButtons, IonCard, IonCardContent, IonCardHeader, IonCardSubtitle, IonCardTitle, IonCol, IonContent, IonGrid, IonHeader, IonIcon, IonItem, IonLabel, IonList, IonRow, IonText, IonTitle, IonToolbar } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
-import { chevronForwardOutline, documentTextOutline, logInOutline, mapOutline, statsChartOutline, trophyOutline } from 'ionicons/icons';
+import { chevronForwardOutline, documentTextOutline, logInOutline, mapOutline, medalOutline, statsChartOutline, trophyOutline } from 'ionicons/icons';
 import { Report, User } from 'src/app/models';
 import { AuthStateService, ReportService } from 'src/app/services';
+import { ReportDialogComponent } from "../../../components/report-dialog/report-dialog.component";
 
 @Component({
   selector: 'app-dashboard',
   templateUrl: './dashboard.page.html',
   styleUrls: ['./dashboard.page.scss'],
   standalone: true,
-  imports: [NgIf, IonCardSubtitle, IonCardContent, IonList, IonGrid, IonRow, IonCol, IonCard, IonCardHeader, IonCardTitle, IonItem, IonText, IonButton, IonLabel, IonIcon, IonContent, IonHeader, IonTitle, IonToolbar, CommonModule],
+  imports: [NgIf, IonCardSubtitle, IonCardContent, IonList, IonGrid, IonRow, IonCol, IonCard, IonCardHeader, IonCardTitle, IonItem, IonText, IonButton, IonLabel, IonIcon, IonContent, IonHeader, IonTitle, IonToolbar, CommonModule, ReportDialogComponent],
 })
 export class DashboardPage implements OnInit {
   user: User | null = null;

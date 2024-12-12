@@ -20,7 +20,6 @@ export class UserProfileService extends BaseService<UserProfile> {
       .from(this.tableName)
       .insert({
         user_id: userId,
-        karen_level: 1,
         total_points: 0,
         role: UserRole.User,
         push_notifications: false,
@@ -34,6 +33,14 @@ export class UserProfileService extends BaseService<UserProfile> {
     const { data, error } = await this.getById(userId);
     if (error) throw error;
     this.currentProfile.next(data);
+  }
+
+  async getRankings(): Promise<QueryResult<UserProfile[]>> {
+    return await supabase
+      .from(this.tableName)
+      .select('user_id, total_points, role, push_notifications, device_token, created_at, updated_at')
+      .order('total_points', { ascending: false })
+      .limit(10);
   }
 
   async getById(userId: string): Promise<QueryResult<UserProfile>> {

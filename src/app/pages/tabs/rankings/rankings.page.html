@@ -1,0 +1,108 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title size="large">Scoreboard</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true" class="ion-padding">
+  <!-- Top 3 Winners -->
+  <div class="winners-container">
+    <!-- 2nd Place -->
+    <ng-container *ngIf="rankings && rankings.length > 1">
+      <div class="winner-card second-place">
+        <div class="trophy-container">
+          <ion-icon [name]="getTrophyIcon(2)" color="{{ getTrophyColor(2)}}"></ion-icon>
+        </div>
+        <div class="winner-info">
+          <h3>{{ rankings[1].username }}</h3>
+          <p>Level {{ getUserLevel(rankings[1].totalPoints!) }}</p>
+        </div>
+      </div>
+    </ng-container>
+
+    <!-- 1st Place -->
+    <ng-container *ngIf="rankings && rankings.length > 0">
+      <div class="winner-card first-place">
+        <div class="trophy-container">
+          <ion-icon [name]="getTrophyIcon(1)"  color="{{ getTrophyColor(1)}}"></ion-icon>
+        </div>
+        <div class="winner-info">
+          <h3>{{ rankings[0].username }}</h3>
+          <p>Level {{ getUserLevel(rankings[0].totalPoints!) }}</p>
+        </div>
+      </div>
+    </ng-container>
+
+    <!-- 3rd Place -->
+    <ng-container *ngIf="rankings && rankings.length > 2">
+      <div class="winner-card third-place">
+        <div class="trophy-container">
+          <ion-icon [name]="getTrophyIcon(3)"  color="{{ getTrophyColor(3)}}"></ion-icon>
+        </div>
+        <div class="winner-info">
+          <h3>{{ rankings[2].username }}</h3>
+          <p>Level {{ getUserLevel(rankings[2].totalPoints!) }}</p>
+        </div>
+      </div>
+    </ng-container>
+  </div>
+
+  <!-- Rankings Table -->
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title class="ion-text-center">
+        <ion-text color="primary">Ranking List</ion-text>
+      </ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <ion-list>
+        <!-- Table Header -->
+        <ion-item lines="full" class="header-row">
+          <ion-grid>
+            <ion-row>
+              <ion-col size="2" style="padding-left: 12px;">
+                <ion-text color="medium">#</ion-text>
+              </ion-col>
+              <ion-col size="4">
+                <ion-text color="medium">User</ion-text>
+              </ion-col>
+              <ion-col size="3" class="ion-text-center">
+                <ion-text color="medium">Level</ion-text>
+              </ion-col>
+              <ion-col size="3" class="ion-text-right">
+                <ion-text color="medium">Points</ion-text>
+              </ion-col>
+            </ion-row>
+          </ion-grid>
+        </ion-item>
+
+        <!-- Table Rows -->
+        <ion-item *ngFor="let user of rankings" lines="full">
+          <ion-grid>
+            <ion-row class="ion-align-items-center">
+              <ion-col size="2" class="ion-text-center">
+                <ion-badge [color]="getTrophyColor(getUserRanking(user.id!))" mode="ios">
+                  {{ getUserRanking(user.id!) }}
+                </ion-badge>
+              </ion-col>
+              <ion-col size="4" class="user-column">
+                <div class="user-info">
+                  <ion-avatar>
+                    <div id="svgDiv" [innerHTML]="getUserAvatar(user.username!)"></div>
+                  </ion-avatar>
+                  <ion-label>{{ user.username }}</ion-label>
+                </div>
+              </ion-col>
+              <ion-col size="3" class="ion-text-center">
+                <ion-label>{{ getUserLevel(user.totalPoints!) }}</ion-label>
+              </ion-col>
+              <ion-col size="3" class="ion-text-right">
+                <ion-note color="primary">{{ user.totalPoints }}</ion-note>
+              </ion-col>
+            </ion-row>
+          </ion-grid>
+        </ion-item>
+      </ion-list>
+    </ion-card-content>
+  </ion-card>
+</ion-content>

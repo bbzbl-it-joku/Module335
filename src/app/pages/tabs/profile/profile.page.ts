@@ -4,7 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { IonAvatar, IonButton, IonButtons, IonCard, IonCardContent, IonCardHeader, IonCardSubtitle, IonCardTitle, IonContent, IonHeader, IonIcon, IonItem, IonItemDivider, IonItemGroup, IonLabel, IonList, IonNote, IonProgressBar, IonTitle, IonToggle, IonToolbar, ModalController } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
-import { addCircleOutline, homeOutline, keyOutline, logOutOutline, mapOutline, notificationsOutline, personOutline, trophyOutline } from 'ionicons/icons';
+import { addCircleOutline, homeOutline, keyOutline, logOutOutline, mapOutline, notificationsOutline, personOutline, trophyOutline, listOutline, settingsOutline } from 'ionicons/icons';
 import * as jdenticon from 'jdenticon';
 import { EditProfileComponent } from 'src/app/components/edit-profile/edit-profile.component';
 import { LevelProgress, User } from 'src/app/models';
@@ -32,7 +32,7 @@ export class ProfilePage implements OnInit {
     private modalController: ModalController,
     private sanitizer: DomSanitizer
   ) {
-    addIcons({logOutOutline,personOutline,keyOutline,notificationsOutline,addCircleOutline,homeOutline,mapOutline,trophyOutline});
+    addIcons({logOutOutline,personOutline,notificationsOutline,settingsOutline,addCircleOutline,listOutline,keyOutline,homeOutline,mapOutline,trophyOutline});
   }
 
   ngOnInit() {
@@ -41,7 +41,7 @@ export class ProfilePage implements OnInit {
       if (user) {
         this.user = user;
         if (user.email) {
-          const svg = jdenticon.toSvg(user.email, 95);
+          const svg = jdenticon.toSvg(user.username, 95);
           this.avatarSvg = this.sanitizer.bypassSecurityTrustHtml(svg);
         }
       }
