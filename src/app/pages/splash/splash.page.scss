@@ -1,0 +1,82 @@
+:host {
+  display: block;
+  height: 100vh;
+}
+
+.splash-content {
+  --background: transparent;
+  background: linear-gradient(135deg, var(--ion-color-primary) 0%, #024dfc 100%);
+}
+
+.splash-container {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  color: white;
+  padding: 2rem;
+}
+
+.logo-container {
+  text-align: center;
+  animation: fadeIn 1s ease-in;
+}
+
+.logo-icon {
+  font-size: 80px;
+  margin-bottom: 20px;
+}
+
+.app-name {
+  font-size: 48px;
+  font-weight: bold;
+  margin: 0;
+  letter-spacing: 2px;
+}
+
+.app-subtitle {
+  font-size: 18px;
+  margin-top: 8px;
+  opacity: 0.9;
+}
+
+.loading-indicator {
+  width: 200px;
+  height: 4px;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 2px;
+  margin-top: 40px;
+  overflow: hidden;
+}
+
+.loading-bar {
+  width: 40%;
+  height: 100%;
+  background: white;
+  border-radius: 2px;
+  animation: loading 2s infinite ease-in-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes loading {
+  0% {
+    transform: translateX(-200%);
+  }
+  50% {
+    transform: translateX(200%);
+  }
+  100% {
+    transform: translateX(-200%);
+  }
+}

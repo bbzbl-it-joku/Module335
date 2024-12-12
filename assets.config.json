@@ -1,0 +1,13 @@
+{
+  "splash": {
+    "splashScreenDelay": 3000,
+    "backgroundColor": "#3880ff",
+    "baseColor": "#3880ff",
+    "showSpinner": true,
+    "androidSplashResourceName": "splash",
+    "splashFullScreen": true,
+    "splashImmersive": true,
+    "layoutName": "launch_screen",
+    "useDialog": false
+  }
+}

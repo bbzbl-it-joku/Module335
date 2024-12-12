@@ -1,5 +1,24 @@
 {
-  "appId": "ionic.module335",
-  "appName": "ionic-module335",
-  "webDir": "www"
+  "appId": "com.tuka.app",
+  "appName": "tuka",
+  "webDir": "www",
+  "plugins": {
+    "SplashScreen": {
+      "launchShowDuration": 2000,
+      "launchAutoHide": true,
+      "backgroundColor": "#3880ff",
+      "androidSplashResourceName": "splash",
+      "androidScaleType": "CENTER_CROP",
+      "showSpinner": true,
+      "androidSpinnerStyle": "large",
+      "iosSpinnerStyle": "small",
+      "spinnerColor": "#ffffff",
+      "splashFullScreen": true,
+      "splashImmersive": true
+    }
+  },
+  "assets": {
+    "source": "resources",
+    "outputPath": "android/app/src/main/res"
+  }
 }

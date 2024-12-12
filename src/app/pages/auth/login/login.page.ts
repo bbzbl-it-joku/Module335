@@ -37,7 +37,7 @@ export class LoginPage implements OnInit, OnDestroy {
   ngOnInit() {
     this.authSubscription = this.authStateService.getCurrentUser().subscribe(user => {
       if (user) {
-        this.router.navigate(['/']);
+        this.router.navigate(['/tabs']);
       }
     });
   }
@@ -55,7 +55,7 @@ export class LoginPage implements OnInit, OnDestroy {
         if (error) throw error;
 
         await this.toastService.presentToast('Successfully logged in!', 'success');
-        await this.router.navigate(['/']);
+        await this.router.navigate(['/tabs']);
       } catch (error) {
         console.error('Login error:', error);
         const errorMessage = error instanceof Error ? error.message : 'Failed to login. Please try again.';
@@ -67,6 +67,6 @@ export class LoginPage implements OnInit, OnDestroy {
   }
 
   async back() {
-    await this.router.navigate(['/']);
+    await this.router.navigate(['/tabs']);
   }
 }

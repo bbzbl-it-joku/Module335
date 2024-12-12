@@ -83,10 +83,8 @@ export class ReportDialogComponent implements OnInit, AfterViewInit {
   }
 
   private loadDraft() {
-    const { userId, ...draftData } = this.reportForm.value;
-    if (!this.user || !this.user.id === userId) {
-      console.log('Clearing draft for different user');
-
+    const { userId, ...draftData } = JSON.parse(localStorage.getItem(DRAFT_STORAGE_KEY) ?? '{}');
+    if (this.user?.id === userId) {
       this.clearDraft();
       return;
     }

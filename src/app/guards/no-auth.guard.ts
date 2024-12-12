@@ -22,7 +22,7 @@ export class NoAuthGuard implements CanActivate {
           return true;
         } else {
           // Already authenticated, redirect to home
-          return this.router.createUrlTree(['/']);
+          return this.router.createUrlTree(['/tabs']);
         }
       })
     );

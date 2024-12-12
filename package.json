@@ -1,8 +1,7 @@
 {
-  "name": "module335",
+  "name": "tuka",
   "version": "0.0.0",
-  "author": "Ionic Framework",
-  "homepage": "https://ionicframework.com/",
+  "author": "Josh",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
@@ -51,6 +50,7 @@
     "@angular/cli": "^18.0.0",
     "@angular/compiler-cli": "^18.0.0",
     "@angular/language-service": "^18.0.0",
+    "@capacitor/assets": "^3.0.5",
     "@capacitor/cli": "6.2.0",
     "@ionic/angular-toolkit": "^11.0.1",
     "@types/jasmine": "~5.1.0",

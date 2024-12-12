@@ -157,7 +157,7 @@ export class AuthService {
   async signOut(): Promise<void> {
     await supabase.auth.signOut();
     this.authStateService.clearCurrentUser();
-    this.router.navigate(['/']);
+    this.router.navigate(['/tabs']);
   }
 
   private async loadUser() {
