@@ -5,7 +5,6 @@ export * from './db/category.service';
 export * from './db/comment.service';
 export * from './db/level.service';
 export * from './db/location.service';
-export * from './db/notification.service';
 export * from './db/reaction.service';
 export * from './db/report.service';
 export * from './db/user-profile.service';

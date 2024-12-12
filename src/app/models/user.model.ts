@@ -9,8 +9,6 @@ export class User implements IUser {
   readonly username: string;
   readonly totalPoints: number;
   readonly role: UserRole;
-  readonly pushNotifications: boolean;
-  readonly deviceToken: string;
   readonly createdAt: Date;
   readonly updatedAt: Date;
 
@@ -25,8 +23,6 @@ export class User implements IUser {
     this.username = validatedUser.username;
     this.totalPoints = validatedProfile.total_points;
     this.role = validatedProfile.role;
-    this.pushNotifications = validatedProfile.push_notifications;
-    this.deviceToken = validatedProfile.device_token;
     this.createdAt = new Date(validatedUser.created_at);
     this.updatedAt = new Date(validatedUser.updated_at);
   }
@@ -42,8 +38,6 @@ export class User implements IUser {
       username: this.username,
       totalPoints: this.totalPoints,
       role: this.role,
-      pushNotifications: this.pushNotifications,
-      deviceToken: this.deviceToken,
       createdAt: this.createdAt,
       updatedAt: this.updatedAt
     };
@@ -71,8 +65,6 @@ export class User implements IUser {
         user_id: this.id,
         total_points: updates.total_points ?? this.totalPoints,
         role: this.role,
-        push_notifications: updates.push_notifications ?? this.pushNotifications,
-        device_token: updates.device_token ?? this.deviceToken,
       }
     );
   }

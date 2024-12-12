@@ -13,8 +13,6 @@ export const userProfileSchema = z.object({
   user_id: z.string().uuid(),
   total_points: z.number().int().min(0),
   role: z.nativeEnum(UserRole),
-  push_notifications: z.boolean(),
-  device_token: z.string(),
   created_at: z.string().transform(str => new Date(str)),
   updated_at: z.string().transform(str => new Date(str)),
 });

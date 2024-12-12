@@ -5,7 +5,6 @@ export * from './types';
 export * from './category.model';
 export * from './comment.model';
 export * from './location.model';
-export * from './notification.model';
 export * from './reaction.model';
 export * from './report.model';
 export * from './user-profile.model';

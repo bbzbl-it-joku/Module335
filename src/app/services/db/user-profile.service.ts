@@ -22,8 +22,6 @@ export class UserProfileService extends BaseService<UserProfile> {
         user_id: userId,
         total_points: 0,
         role: UserRole.User,
-        push_notifications: false,
-        device_token: '',
       })
       .select()
       .single();
@@ -38,7 +36,7 @@ export class UserProfileService extends BaseService<UserProfile> {
   async getRankings(): Promise<QueryResult<UserProfile[]>> {
     return await supabase
       .from(this.tableName)
-      .select('user_id, total_points, role, push_notifications, device_token, created_at, updated_at')
+      .select('user_id, total_points, role, created_at, updated_at')
       .order('total_points', { ascending: false })
       .limit(10);
   }
@@ -86,9 +84,5 @@ export class UserProfileService extends BaseService<UserProfile> {
       return;
     }
     await this.loadProfile(userId);
-  }
-
-  async togglePushNotifications(userId: string, currentState: boolean): Promise<QueryResult<UserProfile>> {
-    return this.update(userId, { push_notifications: !currentState });
   }
 }

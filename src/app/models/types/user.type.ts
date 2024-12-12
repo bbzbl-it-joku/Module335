@@ -14,8 +14,6 @@ export interface IUserProfile {
   user_id: string;
   total_points: number;
   role: UserRole;
-  push_notifications: boolean;
-  device_token: string;
   created_at?: Date;
   updated_at?: Date;
 }
@@ -26,8 +24,6 @@ export interface IUser {
   username: string;
   totalPoints: number;
   role: UserRole;
-  pushNotifications: boolean;
-  deviceToken: string;
   createdAt: Date;
   updatedAt: Date;
 }

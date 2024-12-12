@@ -2,20 +2,42 @@ import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
-import { IonAvatar, IonButton, IonButtons, IonCard, IonCardContent, IonCardHeader, IonCardSubtitle, IonCardTitle, IonContent, IonHeader, IonIcon, IonItem, IonItemDivider, IonItemGroup, IonLabel, IonList, IonNote, IonProgressBar, IonTitle, IonToggle, IonToolbar, ModalController } from '@ionic/angular/standalone';
+import {
+  IonAvatar, IonButton, IonButtons, IonCard, IonCardContent, IonCardHeader,
+  IonCardSubtitle, IonCardTitle, IonContent, IonHeader, IonIcon, IonItem,
+  IonItemDivider, IonItemGroup, IonLabel, IonList, IonNote, IonProgressBar,
+  IonTitle, IonToggle, IonToolbar, ModalController
+} from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
-import { addCircleOutline, homeOutline, keyOutline, logOutOutline, mapOutline, notificationsOutline, personOutline, trophyOutline, listOutline, settingsOutline } from 'ionicons/icons';
+import {
+  addCircleOutline, homeOutline, keyOutline, listOutline,
+  logOutOutline, mapOutline, notificationsOutline, personOutline,
+  refreshOutline,
+  settingsOutline, trophyOutline
+} from 'ionicons/icons';
 import * as jdenticon from 'jdenticon';
 import { EditProfileComponent } from 'src/app/components/edit-profile/edit-profile.component';
 import { LevelProgress, User } from 'src/app/models';
-import { AlertService, AuthService, AuthStateService, LevelService, ToastService, UserProfileService } from 'src/app/services';
+import {
+  AlertService, AuthService, AuthStateService,
+  LevelService,
+  ToastService,
+  UserProfileService
+} from 'src/app/services';
+import { supabase } from 'src/app/supabase/supabase.config';
 
 @Component({
   selector: 'app-profile',
   templateUrl: './profile.page.html',
   styleUrls: ['./profile.page.scss'],
   standalone: true,
-  imports: [IonCardTitle, IonItemGroup, IonItemDivider, IonCardHeader, IonCardSubtitle, IonList, IonNote, IonToggle, IonItem, IonProgressBar, IonCardContent, IonCard, IonLabel, IonAvatar, IonButton, IonButtons, IonContent, IonTitle, IonIcon, IonToolbar, IonHeader, IonLabel, IonButtons, IonButton, IonIcon, IonContent, IonHeader, IonTitle, IonToolbar, CommonModule, FormsModule, IonItem, IonToggle, IonCard, IonCardContent, IonProgressBar, IonAvatar]
+  imports: [
+    IonCardTitle, IonItemGroup, IonItemDivider, IonCardHeader,
+    IonCardSubtitle, IonList, IonNote, IonItem,
+    IonProgressBar, IonCardContent, IonCard, IonLabel, IonAvatar,
+    IonButton, IonButtons, IonContent, IonTitle, IonIcon,
+    IonToolbar, IonHeader, CommonModule, FormsModule
+  ]
 })
 export class ProfilePage implements OnInit {
   user: User | null = null;
@@ -32,7 +54,12 @@ export class ProfilePage implements OnInit {
     private modalController: ModalController,
     private sanitizer: DomSanitizer
   ) {
-    addIcons({logOutOutline,personOutline,notificationsOutline,settingsOutline,addCircleOutline,listOutline,keyOutline,homeOutline,mapOutline,trophyOutline});
+    addIcons({
+      logOutOutline, personOutline, notificationsOutline,
+      settingsOutline, addCircleOutline, listOutline,
+      keyOutline, homeOutline, mapOutline, trophyOutline,
+      refreshOutline
+    });
   }
 
   ngOnInit() {
@@ -53,20 +80,6 @@ export class ProfilePage implements OnInit {
         this.levelProgress = progress
       }
     });
-  }
-
-  async togglePushNotifications() {
-    if (!this.user?.id) return;
-
-    try {
-      await this.userProfileService.togglePushNotifications(
-        this.user.id,
-        this.user.pushNotifications
-      );
-    } catch (error) {
-      console.error('Error toggling push notifications:', error);
-      this.toastService.presentToast('Failed to update push notifications', 'danger');
-    }
   }
 
   async editProfile() {

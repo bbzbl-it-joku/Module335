@@ -53,7 +53,6 @@ export class RankingsPage implements OnInit {
             id: profile.user_id,  // map user_id to id for User model
             username: username || undefined,  // convert null to undefined to match User model
             totalPoints: profile.total_points,  // map total_points to totalPoints
-            pushNotifications: profile.push_notifications,
             role: profile.role,
             createdAt: profile.created_at,
             updatedAt: profile.updated_at
