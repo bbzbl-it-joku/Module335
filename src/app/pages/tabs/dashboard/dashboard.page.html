@@ -110,5 +110,7 @@
     </ion-grid>
   </ng-template>
 
-  <app-report-dialog type="create" triggerPostfix="dashboard" />
+  <ng-container *ngIf="user !== null">
+    <app-report-dialog type="create" triggerPostfix="dashboard" />
+  </ng-container>
 </ion-content>

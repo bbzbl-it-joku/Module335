@@ -2,14 +2,15 @@ import { CommonModule, NgIf } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { IonContent, IonHeader, IonIcon, IonLabel, IonSegment, IonSegmentButton, IonTitle, IonToolbar, IonButton, IonButtons } from '@ionic/angular/standalone';
+import { IonContent, IonHeader, IonIcon, IonLabel, IonSegment, IonSegmentButton, IonTitle, IonToolbar, IonButton, IonButtons, IonFab, IonFabButton } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
-import { listOutline, mapOutline, chevronUpOutline, chevronDownOutline } from 'ionicons/icons';
-import { ReportService } from 'src/app/services';
+import { listOutline, mapOutline, chevronUpOutline, chevronDownOutline, add } from 'ionicons/icons';
+import { AuthStateService, ReportService } from 'src/app/services';
 import { animate, state, style, transition, trigger } from '@angular/animations';
 import { ReportMapComponent } from 'src/app/components/report-map/report-map.component';
 import { ReportListComponent } from 'src/app/components/report-list/report-list.component';
 import { ReportDialogComponent } from "../../../components/report-dialog/report-dialog.component";
+import { User } from 'src/app/models';
 
 @Component({
   selector: 'app-reports',
@@ -39,15 +40,17 @@ import { ReportDialogComponent } from "../../../components/report-dialog/report-
   ]
 })
 export class ReportsPage implements OnInit {
+  user: User | null = null;
   extended = true;
   mode = 'map' as 'map' | 'list';
 
   constructor(
     private reportService: ReportService,
+    private authStateService: AuthStateService,
     private router: Router,
     private route: ActivatedRoute,
   ) {
-    addIcons({ chevronUpOutline, chevronDownOutline, mapOutline, listOutline });
+    addIcons({chevronDownOutline,mapOutline,listOutline,add,chevronUpOutline});
   }
 
   ngOnInit() {
@@ -57,6 +60,9 @@ export class ReportsPage implements OnInit {
       if (params['mode'] && (params['mode'] === 'map' || params['mode'] === 'list')) {
         this.mode = params['mode'];
       }
+    });
+    this.authStateService.getCurrentUser().subscribe(user => {
+      this.user = user;
     });
   }
 

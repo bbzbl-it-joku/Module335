@@ -3,16 +3,12 @@
     <ion-title>Reports</ion-title>
     <ion-buttons slot="end">
       <ion-button (click)="toggleExtended()">
-        <ion-icon
-          [@rotate]="!extended"
-          slot="icon-only"
-          name="chevron-down-outline"
-        ></ion-icon>
+        <ion-icon [@rotate]="!extended" slot="icon-only" name="chevron-down-outline"></ion-icon>
       </ion-button>
     </ion-buttons>
   </ion-toolbar>
   <div [@slideInOut]="extended">
-    <ion-segment [(ngModel)]="mode" color="primary">
+    <ion-segment [(ngModel)]="mode" (ionChange)="onModeChange($event)" color="primary">
       <ion-segment-button value="map">
         <ion-icon name="map-outline"></ion-icon>
         <ion-label>Map</ion-label>
@@ -33,5 +29,7 @@
     <app-report-list />
   </div>
 
-  <app-report-dialog type="create" triggerPostfix="reports" />
+  <ng-container *ngIf="user !== null">
+    <app-report-dialog type="create" triggerPostfix="reports" />
+  </ng-container>
 </ion-content>
