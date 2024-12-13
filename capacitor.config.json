@@ -11,11 +11,28 @@
       "androidScaleType": "CENTER_CROP",
       "showSpinner": true,
       "androidSpinnerStyle": "large",
-      "iosSpinnerStyle": "small",
       "spinnerColor": "#ffffff",
       "splashFullScreen": true,
       "splashImmersive": true
+    },
+    "GoogleMaps": {
+      "android": {
+        "apiKey": "YOUR_ANDROID_API_KEY"
+      }
+    },
+    "Geolocation": {
+      "permissions": [
+        "location",
+        "coarseLocation"
+      ]
     }
+  },
+  "server": {
+    "cleartext": true,
+    "allowNavigation": [
+      "*.google.com",
+      "*.googleapis.com"
+    ]
   },
   "assets": {
     "source": "resources",
