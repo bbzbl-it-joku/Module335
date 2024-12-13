@@ -5,14 +5,50 @@
     </ion-card-title>
   </ion-card-header>
   <ion-card-content>
-    <ion-list lines="full">
-      <ion-item *ngFor="let report of reports" detail="true">
-        <ion-icon [name]="report.category.iconName" slot="start" size="small"></ion-icon>
-        <ion-label class="ion-text-wrap">
-          <h2>{{ report.title }}</h2>
-          <p>{{ report.description }}</p>
-        </ion-label>
+    <ion-list>
+      <!-- Table Header -->
+      <ion-item lines="full" class="header-row">
+        <ion-grid>
+          <ion-row>
+            <ion-col size="1">
+              <ion-text color="medium"></ion-text>
+            </ion-col>
+            <ion-col size="4">
+              <ion-text color="medium">Title</ion-text>
+            </ion-col>
+            <ion-col size="3">
+              <ion-text color="medium">Description</ion-text>
+            </ion-col>
+            <ion-col size="2" class="ion-text-center">
+              <ion-text color="medium">Category</ion-text>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
       </ion-item>
+
+      <!-- Table Rows -->
+      <ion-item *ngFor="let report of reports" lines="full">
+        <ion-grid>
+          <ion-row class="ion-align-items-center">
+            <ion-col size="1" class="ion-text-center">
+              <ion-icon [name]="report.category.iconName" size="small"></ion-icon>
+            </ion-col>
+            <ion-col size="4">
+              <ion-label>{{ report.title }}</ion-label>
+            </ion-col>
+            <ion-col size="3">
+              <ion-note>{{ report.description }}</ion-note>
+            </ion-col>
+            <ion-col size="2" class="ion-text-center">
+              <ion-badge color="primary" mode="ios">
+                {{ report.category.name }}
+              </ion-badge>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+      </ion-item>
+
+      <!-- Empty State -->
       <ng-container *ngIf="reports.length === 0">
         <ion-item lines="none">
           <ion-label class="ion-text-wrap ion-text-center">

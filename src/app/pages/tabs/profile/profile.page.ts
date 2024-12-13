@@ -11,7 +11,9 @@ import {
 import { addIcons } from 'ionicons';
 import {
   addCircleOutline, homeOutline, keyOutline, listOutline,
-  logOutOutline, mapOutline, notificationsOutline, personOutline,
+  logOutOutline, mapOutline,
+  moonOutline,
+  notificationsOutline, personOutline,
   refreshOutline,
   settingsOutline, trophyOutline
 } from 'ionicons/icons';
@@ -21,10 +23,9 @@ import { LevelProgress, User } from 'src/app/models';
 import {
   AlertService, AuthService, AuthStateService,
   LevelService,
-  ToastService,
-  UserProfileService
+  ToastService
 } from 'src/app/services';
-import { supabase } from 'src/app/supabase/supabase.config';
+import { ThemeService } from 'src/app/services/theme.service';
 
 @Component({
   selector: 'app-profile',
@@ -36,10 +37,11 @@ import { supabase } from 'src/app/supabase/supabase.config';
     IonCardSubtitle, IonList, IonNote, IonItem,
     IonProgressBar, IonCardContent, IonCard, IonLabel, IonAvatar,
     IonButton, IonButtons, IonContent, IonTitle, IonIcon,
-    IonToolbar, IonHeader, CommonModule, FormsModule
+    IonToolbar, IonHeader, CommonModule, FormsModule, IonToggle
   ]
 })
 export class ProfilePage implements OnInit {
+  darkMode = true;
   user: User | null = null;
   avatarSvg: SafeHtml = '';
   levelProgress: LevelProgress | null = null;
@@ -49,17 +51,12 @@ export class ProfilePage implements OnInit {
     private alertService: AlertService,
     private authService: AuthService,
     private authStateService: AuthStateService,
-    private userProfileService: UserProfileService,
+    private themeService: ThemeService,
     private levelService: LevelService,
     private modalController: ModalController,
     private sanitizer: DomSanitizer
   ) {
-    addIcons({
-      logOutOutline, personOutline, notificationsOutline,
-      settingsOutline, addCircleOutline, listOutline,
-      keyOutline, homeOutline, mapOutline, trophyOutline,
-      refreshOutline
-    });
+    addIcons({ logOutOutline, personOutline, moonOutline, settingsOutline, addCircleOutline, notificationsOutline, listOutline, keyOutline, homeOutline, mapOutline, trophyOutline, refreshOutline });
   }
 
   ngOnInit() {
@@ -67,7 +64,7 @@ export class ProfilePage implements OnInit {
     this.authStateService.getCurrentUser().subscribe(async (user) => {
       if (user) {
         this.user = user;
-        if (user.email) {
+        if (user.username) {
           const svg = jdenticon.toSvg(user.username, 95);
           this.avatarSvg = this.sanitizer.bypassSecurityTrustHtml(svg);
         }
@@ -80,6 +77,8 @@ export class ProfilePage implements OnInit {
         this.levelProgress = progress
       }
     });
+
+    this.darkMode = this.themeService.isDarkMode();
   }
 
   async editProfile() {
@@ -113,5 +112,10 @@ export class ProfilePage implements OnInit {
         await this.authService.signOut();
       }
     });
+  }
+
+  toggleDarkMode(event: CustomEvent) {
+    this.darkMode = event.detail.checked;
+    this.themeService.setTheme(this.darkMode);
   }
 }

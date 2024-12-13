@@ -49,11 +49,6 @@ export class ReportMapComponent implements OnInit {
         return;
       }
 
-      console.log('Setting up map with container dimensions:', {
-        width: mapElement.clientWidth,
-        height: mapElement.clientHeight
-      });
-
       // Get location with default fallback
       const location = await this.geolocationService.getCurrentPosition() ?? {
         latitude: 47.47221941974559,

@@ -1,25 +1,23 @@
-import { Component, OnInit } from '@angular/core';
-import { IonHeader, IonSpinner, IonButton, IonContent, IonIcon, IonButtons, IonTitle, IonToolbar } from "@ionic/angular/standalone";
-import { ElementRef, Input, ViewChild } from '@angular/core';
-import { ModalController } from '@ionic/angular';
-import { Location } from 'src/app/models';
-import { GeolocationService, LocationService } from 'src/app/services';
+import { NgIf } from '@angular/common';
+import { AfterViewInit, ChangeDetectorRef, Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
 import { Geolocation } from '@capacitor/geolocation';
+import { GoogleMap } from '@capacitor/google-maps';
+import { IonButton, IonButtons, IonContent, IonHeader, IonIcon, IonSpinner, IonTitle, IonToolbar, ModalController } from "@ionic/angular/standalone";
 import { addIcons } from 'ionicons';
 import { closeOutline, locateOutline } from 'ionicons/icons';
-import { NgIf } from '@angular/common';
+import { Location } from 'src/app/models';
+import { LocationService } from 'src/app/services';
 import { environment } from 'src/environments/environment';
-import { GoogleMap, Marker } from '@capacitor/google-maps';
-import { CapacitorGoogleMaps } from '@capacitor/google-maps/dist/typings/implementation';
 
 @Component({
   selector: 'app-select-location',
   templateUrl: './select-location.component.html',
   styleUrls: ['./select-location.component.scss'],
   standalone: true,
-  imports: [IonToolbar, IonTitle, IonButtons, IonIcon, IonContent, IonButton, IonSpinner, IonHeader, NgIf]
+  imports: [NgIf, IonToolbar, IonTitle, IonButtons, IonIcon, IonContent, IonButton, IonSpinner, IonHeader, NgIf]
 })
-export class SelectLocationComponent  implements OnInit {@ViewChild('map') mapRef!: ElementRef;
+export class SelectLocationComponent implements OnInit, AfterViewInit {
+  @ViewChild('map') mapRef!: ElementRef;
   @Input() initialLocation?: Location;
   @Input() reportId!: string;
 
@@ -28,25 +26,46 @@ export class SelectLocationComponent  implements OnInit {@ViewChild('map') mapRe
   selectedLocation: Partial<Location> | null = null;
   currentAddress: string = '';
   isLoading = false;
+  private mapInitialized = false;
 
   constructor(
     private modalCtrl: ModalController,
-    private locationService: LocationService
+    private locationService: LocationService,
+    private changeDetector: ChangeDetectorRef
   ) {
     addIcons({ closeOutline, locateOutline });
   }
 
   async ngOnInit() {
-    await this.createMap();
+    // Only initialize basic component state here
     if (this.initialLocation) {
-      await this.setLocation(this.initialLocation.latitude, this.initialLocation.longitude);
-    } else {
-      await this.getCurrentLocation();
+      this.selectedLocation = {
+        latitude: this.initialLocation.latitude,
+        longitude: this.initialLocation.longitude
+      };
     }
   }
 
-  async createMap() {
+  async ngAfterViewInit() {
     try {
+      await this.initializeMap();
+
+      if (this.initialLocation) {
+        await this.setLocation(this.initialLocation.latitude, this.initialLocation.longitude);
+      } else {
+        await this.getCurrentLocation();
+      }
+    } catch (error) {
+      console.error('Error initializing map:', error);
+    }
+  }
+
+  private async initializeMap() {
+    if (this.mapInitialized) return;
+
+    try {
+      await new Promise(resolve => setTimeout(resolve, 100)); // Small delay to ensure DOM is ready
+
       this.map = await GoogleMap.create({
         id: 'map',
         element: this.mapRef.nativeElement,
@@ -56,17 +75,22 @@ export class SelectLocationComponent  implements OnInit {@ViewChild('map') mapRe
             lat: 0,
             lng: 0
           },
-          zoom: 15
+          zoom: 15,
+          clickableIcons: false,
+          disableDefaultUI: true
         }
       });
 
       // Add click listener
       await this.map.setOnMapClickListener(async (event) => {
+        console.log('Map clicked:', event);
         await this.setLocation(event.latitude, event.longitude);
       });
 
+      this.mapInitialized = true;
     } catch (error) {
       console.error('Error creating map:', error);
+      throw error;
     }
   }
 
@@ -83,6 +107,11 @@ export class SelectLocationComponent  implements OnInit {@ViewChild('map') mapRe
   }
 
   private async setLocation(latitude: number, longitude: number) {
+    if (!this.mapInitialized) {
+      console.warn('Map not initialized yet');
+      return;
+    }
+
     try {
       // Remove existing marker if any
       if (this.marker) {
@@ -123,6 +152,8 @@ export class SelectLocationComponent  implements OnInit {@ViewChild('map') mapRe
 
         if (data.results && data.results[0]) {
           this.currentAddress = data.results[0].formatted_address;
+          // Trigger change detection
+          this.changeDetector.detectChanges();
         }
       } catch (error) {
         console.error('Error getting address:', error);
@@ -140,29 +171,14 @@ export class SelectLocationComponent  implements OnInit {@ViewChild('map') mapRe
 
   async confirmLocation() {
     if (this.selectedLocation) {
-      if (this.initialLocation?.id) {
-        // Update existing location
-        await this.locationService.update(this.initialLocation.id, {
-          ...this.selectedLocation,
-          extraData: { ...this.selectedLocation.extraData, address: this.currentAddress }
-        });
-      } else {
-        // Create new location
-        await this.locationService.create({
-          reportId: this.reportId,
-          latitude: this.selectedLocation?.latitude!,
-          longitude: this.selectedLocation?.longitude!,
-          extraData: { ...this.selectedLocation?.extraData, address: this.currentAddress }
-        });
-      }
-
+      // Return the location data without saving it
       this.modalCtrl.dismiss({
-        ...this.selectedLocation,
-        extraData: { ...this.selectedLocation.extraData, address: this.currentAddress }
+        latitude: this.selectedLocation.latitude!,
+        longitude: this.selectedLocation.longitude!,
+        extraData: { address: this.currentAddress }
       });
     }
   }
-
   async dismiss() {
     this.modalCtrl.dismiss();
   }

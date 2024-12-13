@@ -17,105 +17,118 @@ const DRAFT_STORAGE_KEY = 'report_draft';
   templateUrl: './report-dialog.component.html',
   styleUrls: ['./report-dialog.component.scss'],
   standalone: true,
-  imports: [IonList, IonFab, IonFabButton, IonTextarea, IonIcon, NgIf, NgFor, IonInput, IonText, IonHeader, IonToolbar, IonButtons, IonButton, IonContent, IonTitle, IonLabel, IonItem, IonModal, IonSelectOption, CommonModule, FormsModule, ReactiveFormsModule],
+  imports: [IonList, IonFab, IonFabButton, IonTextarea, IonIcon, NgIf, NgFor, IonInput, IonHeader, IonToolbar, IonButtons, IonButton, IonContent, IonTitle, IonLabel, IonItem, IonModal, IonSelectOption, CommonModule, FormsModule, ReactiveFormsModule],
 })
 export class ReportDialogComponent implements OnInit, AfterViewInit {
-    @Input() trigger?: string;
-    @Input() triggerPostfix?: string;
-    @Input({ required: true }) type!: 'create' | 'edit';
-    @Input() report?: Report;
-    @ViewChild(IonModal) modal!: IonModal;
-    @ViewChild('categoryModal') categoryModal!: IonModal;
+  @Input() trigger?: string;
+  @Input() triggerPostfix?: string;
+  @Input({ required: true }) type!: 'create' | 'edit';
+  @Input() report?: Report;
+  @ViewChild(IonModal) modal!: IonModal;
+  @ViewChild('categoryModal') categoryModal!: IonModal;
 
-    user: User | null = null;
-    selectedCategory: Category | null = null;
-    selectedLocation: Location | null = null;
+  user: User | null = null;
+  selectedCategory: Category | null = null;
+  selectedLocation: Location | null = null;
 
+  reportForm!: FormGroup;
+  categories: Category[] = [];
+  reportStatuses = Object.values(ReportStatus);
+  private draftSaveTimeout?: any;
 
-    reportForm!: FormGroup;
-    categories: Category[] = [];
-    reportStatuses = Object.values(ReportStatus);
-    private draftSaveTimeout?: any;
+  pendingLocation: Partial<Location> | null = null;
 
-    constructor(
-      private fb: FormBuilder,
-      private modalCtrl: ModalController,
-      private authStateService: AuthStateService,
-      private locationService: LocationService,
-      private toastService: ToastService,
-      private reportService: ReportService,
-      private categoryService: CategoryService
-    ) {
-      addIcons({add,closeOutline,chevronForward,map,checkmark});
-      this.initForm();
+  constructor(
+    private fb: FormBuilder,
+    private modalCtrl: ModalController,
+    private authStateService: AuthStateService,
+    private locationService: LocationService,
+    private toastService: ToastService,
+    private reportService: ReportService,
+    private categoryService: CategoryService
+  ) {
+    addIcons({ add, closeOutline, chevronForward, map, checkmark });
+    this.initForm();
+  }
+
+  private initForm() {
+    this.reportForm = this.fb.group({
+      title: ['', [Validators.required, Validators.minLength(1)]],
+      category: [null, Validators.required],
+      description: ['', [Validators.required, Validators.minLength(1)]],
+      status: [ReportStatus.Pending],
+      mediaUrls: [[]]
+    });
+
+    this.reportForm.valueChanges.subscribe(() => {
+      this.onFormChange();
+    });
+  }
+
+  async ngOnInit() {
+    this.authStateService.getCurrentUser().subscribe(user => {
+      this.user = user;
+    });
+    this.loadCategories();
+    if (this.report?.id) {
+      const { data: location } = await this.locationService.getByReportId(this.report.id);
+      if (location) {
+        this.selectedLocation = location;
+      }
     }
+  }
 
-    private initForm() {
-      this.reportForm = this.fb.group({
-        title: ['', [Validators.required, Validators.minLength(1)]],
-        category: [null, Validators.required],
-        description: ['', [Validators.required, Validators.minLength(1)]],
-        status: [ReportStatus.Pending],
-        mediaUrls: [[]]
-      });
+  async openMapModal() {
+    const modal = await this.modalCtrl.create({
+      component: SelectLocationComponent,
+      componentProps: {
+        initialLocation: this.selectedLocation,
+        reportId: this.report?.id || ''
+      }
+    });
 
-      this.reportForm.valueChanges.subscribe(() => {
-        this.onFormChange();
-      });
-    }
+    await modal.present();
 
-    async ngOnInit() {
-      this.authStateService.getCurrentUser().subscribe(user => {
-        this.user = user;
-      });
-      this.loadCategories();
+    const { data } = await modal.onWillDismiss();
+    if (data) {
       if (this.report?.id) {
-        const { data: location } = await this.locationService.getByReportId(this.report.id);
-        if (location) {
-          this.selectedLocation = location;
-        }
+        // If editing an existing report, save location immediately
+        const location = await this.locationService.create({
+          reportId: this.report.id,
+          ...data
+        });
+        this.selectedLocation = location.data as Location;
+      } else {
+        // If creating a new report, store location data temporarily
+        this.pendingLocation = data;
+        this.selectedLocation = data as Location;
       }
     }
+  }
 
-    async openMapModal() {
-      const modal = await this.modalCtrl.create({
-        component: SelectLocationComponent,
-        componentProps: {
-          initialLocation: this.selectedLocation,
-          reportId: this.report?.id || ''
-        }
-      });
 
-      await modal.present();
+  async openCategoryDialog() {
+    await this.categoryModal.present();
+  }
 
-      const { data } = await modal.onWillDismiss();
-      if (data) {
-        this.selectedLocation = data;
-      }
+  selectCategory(category: Category) {
+    this.selectedCategory = category;
+  }
+
+  confirmCategory() {
+    if (this.selectedCategory) {
+      this.reportForm.patchValue({ category: this.selectedCategory });
+      this.categoryModal.dismiss(this.selectedCategory, 'confirm');
     }
+  }
 
-    async openCategoryDialog() {
-      await this.categoryModal.present();
+  onCategoryDismiss(event: Event) {
+    const ev = event as CustomEvent<OverlayEventDetail<Category>>;
+    if (ev.detail.role === 'confirm' && ev.detail.data) {
+      this.selectedCategory = ev.detail.data;
+      this.reportForm.patchValue({ category: ev.detail.data });
     }
-
-    selectCategory(category: Category) {
-      this.selectedCategory = category;
-    }
-
-    confirmCategory() {
-      if (this.selectedCategory) {
-        this.reportForm.patchValue({ category: this.selectedCategory });
-        this.categoryModal.dismiss(this.selectedCategory, 'confirm');
-      }
-    }
-
-    onCategoryDismiss(event: Event) {
-      const ev = event as CustomEvent<OverlayEventDetail<Category>>;
-      if (ev.detail.role === 'confirm' && ev.detail.data) {
-        this.selectedCategory = ev.detail.data;
-        this.reportForm.patchValue({ category: ev.detail.data });
-      }
-    }
+  }
 
   ngAfterViewInit() {
     if (!this.trigger) return;
@@ -156,7 +169,7 @@ export class ReportDialogComponent implements OnInit, AfterViewInit {
     if (this.type === 'edit') return; // Don't save drafts in edit mode
 
     try {
-      localStorage.setItem(DRAFT_STORAGE_KEY, JSON.stringify({...this.reportForm.value, userId: this.user?.id}));
+      localStorage.setItem(DRAFT_STORAGE_KEY, JSON.stringify({ ...this.reportForm.value, userId: this.user?.id }));
     } catch (e) {
       console.error('Error saving draft:', e);
       this.toastService.presentToast('Error saving draft', 'danger');
@@ -212,15 +225,39 @@ export class ReportDialogComponent implements OnInit, AfterViewInit {
 
   private async saveReport() {
     const reportData = this.reportForm.value;
-    if (this.type === 'edit' && this.report) {
-      await this.reportService.update(this.report.id!, {
-        ...reportData
-      });
-    } else {
-      await this.reportService.create(reportData);
-    }
+    console.log('Saving report:', reportData);
 
-    this.resetForm();
+    try {
+      let savedReport;
+      if (this.type === 'edit' && this.report) {
+        savedReport = await this.reportService.update(this.report.id!, {
+          ...reportData
+        });
+      } else {
+        console.log('Creating report:', reportData);
+
+        savedReport = await this.reportService.create(reportData, this.user!.id);
+
+        // If we have pending location data, save it now that we have a report ID
+        if (this.pendingLocation && savedReport.data?.id) {
+          console.log('Creating location:', this.pendingLocation);
+          await this.locationService.create({
+            reportId: savedReport.data.id,
+            latitude: this.pendingLocation.latitude!,
+            longitude: this.pendingLocation.longitude!,
+            ...this.pendingLocation
+          });
+        } else {
+          console.warn('No pending location data to save');
+        }
+      }
+
+      this.resetForm();
+      this.pendingLocation = null;
+    } catch (error) {
+      console.error('Error saving report:', error);
+      this.toastService.presentToast('Error saving report', 'danger');
+    }
   }
 
   private resetForm() {
@@ -231,6 +268,8 @@ export class ReportDialogComponent implements OnInit, AfterViewInit {
       status: ReportStatus.Pending,
       mediaUrls: []
     });
+    this.selectedLocation = null;
+    this.pendingLocation = null;
   }
 
   // Form getters for template

@@ -27,10 +27,11 @@ export class DashboardPage implements OnInit {
     addIcons({ trophyOutline, statsChartOutline, chevronForwardOutline, mapOutline, logInOutline, documentTextOutline });
   }
 
-  ngOnInit() {
+  async ngOnInit() {
     this.authStateService.getCurrentUser().subscribe((user) => {
       this.user = user;
     });
+    await this.loadUserReports();
   }
 
   private async loadUserReports() {
