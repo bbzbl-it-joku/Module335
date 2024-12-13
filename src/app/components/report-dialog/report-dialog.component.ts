@@ -40,6 +40,7 @@ export class ReportDialogComponent implements OnInit, AfterViewInit {
     constructor(
       private fb: FormBuilder,
       private modalCtrl: ModalController,
+      private authStateService: AuthStateService,
       private locationService: LocationService,
       private toastService: ToastService,
       private reportService: ReportService,
@@ -64,7 +65,10 @@ export class ReportDialogComponent implements OnInit, AfterViewInit {
     }
 
     async ngOnInit() {
-      // ... existing initialization ...
+      this.authStateService.getCurrentUser().subscribe(user => {
+        this.user = user;
+      });
+      this.loadCategories();
       if (this.report?.id) {
         const { data: location } = await this.locationService.getByReportId(this.report.id);
         if (location) {

@@ -1,3 +1,26 @@
-<p>
-  report-list works!
-</p>
+<ion-card>
+  <ion-card-header>
+    <ion-card-title class="ion-text-center">
+      <ion-text color="primary">All Reports</ion-text>
+    </ion-card-title>
+  </ion-card-header>
+  <ion-card-content>
+    <ion-list lines="full">
+      <ion-item *ngFor="let report of reports" detail="true">
+        <ion-icon [name]="report.category.iconName" slot="start" size="small"></ion-icon>
+        <ion-label class="ion-text-wrap">
+          <h2>{{ report.title }}</h2>
+          <p>{{ report.description }}</p>
+        </ion-label>
+      </ion-item>
+      <ng-container *ngIf="reports.length === 0">
+        <ion-item lines="none">
+          <ion-label class="ion-text-wrap ion-text-center">
+            <h2>No reports yet</h2>
+            <p>Start reporting and help us make the world a better place!</p>
+          </ion-label>
+        </ion-item>
+      </ng-container>
+    </ion-list>
+  </ion-card-content>
+</ion-card>
